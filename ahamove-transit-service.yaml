@@ -356,8 +356,6 @@ definitions:
       order_currency:
         type: string
         description: Order payment time of parcel
-      shipping_fee:
-        type: string
       ship_from:
         $ref: '#/definitions/Address'
       ship_to:
@@ -366,13 +364,33 @@ definitions:
         $ref: '#/definitions/Sender'
       receiver:
         $ref: '#/definitions/Receiver'
+      item:
+        type: object
+        properties:
+          total_price:
+            type: number
+            format: double
+            description: total price of item
+          premium:
+            type: number
+            format: double
+            description: premium of item
+          billing_pictures:
+            type: array
+            description: Billing pictures url b merchant
+            items:
+              type: string
+          product_pictures:
+            type: array
+            description: Products pictures url taken by driver
+            items:
+              type: string
     required:
       - transit_id
       - order_id
       - order_created_date
       - order_paid_date
       - order_currency
-      - shipping_fee
   CreateTransitResponse:
     type: object
     properties:
