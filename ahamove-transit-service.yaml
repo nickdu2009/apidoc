@@ -100,7 +100,7 @@ paths:
         required: true
     put:
       summary: ''
-      operationId: put-transits-transit_id
+      operationId: Update Transit
       responses:
         '200':
           description: OK
@@ -115,6 +115,8 @@ paths:
             properties:
               parcel_status:
                 $ref: '#/definitions/ParcelStatus'
+      tags:
+        - transit
   '/transits/{transit_id}/claims':
     get:
       summary: Get Claim list
@@ -194,7 +196,7 @@ paths:
         description: Claim ID of igloo
     put:
       summary: ''
-      operationId: put-claims-claim_id-reimburse
+      operationId: Approved Claim Reinburse
       responses:
         '200':
           description: OK
@@ -241,7 +243,7 @@ paths:
         description: 'The ID that uniquely identifies the parcel from the partner '
     put:
       summary: ''
-      operationId: put-notify-transits-transit_id
+      operationId: Notify Policy State Change
       responses:
         '200':
           description: OK
@@ -263,7 +265,7 @@ paths:
         description: Claim ID of igloo
     put:
       summary: ''
-      operationId: put-webhook-claims-claim_id
+      operationId: Notify Claim State Change
       responses:
         '200':
           description: OK
