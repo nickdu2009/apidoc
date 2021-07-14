@@ -196,7 +196,7 @@ paths:
         description: Claim ID of igloo
     put:
       summary: ''
-      operationId: Approved Claim Reinburse
+      operationId: Approved Claim Reimburse
       responses:
         '200':
           description: OK
