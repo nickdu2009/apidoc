@@ -444,7 +444,7 @@ definitions:
       - Requested
       - Approved
       - Rejected
-      - pending proof
+      - Pend Proof
   PolicyState:
     type: string
     enum:
@@ -452,7 +452,7 @@ definitions:
       - Activated
       - Ended
       - Expired
-      - cancelled
+      - Cancelled
   Error:
     type: object
     properties:
