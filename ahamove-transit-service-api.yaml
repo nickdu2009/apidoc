@@ -445,6 +445,7 @@ definitions:
       - Approved
       - Rejected
       - Pending Proof
+      - Cancelled
   PolicyState:
     type: string
     enum:
