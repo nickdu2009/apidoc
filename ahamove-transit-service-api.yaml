@@ -555,8 +555,8 @@ definitions:
     type: string
     title: ClaimType
     enum:
-      - Dmage
       - Lost
+      - Damage
 parameters: {}
 responses:
   errBadRequestResponse:
