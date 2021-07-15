@@ -444,7 +444,7 @@ definitions:
       - Requested
       - Approved
       - Rejected
-      - Pend Proof
+      - Pending Proof
   PolicyState:
     type: string
     enum:
