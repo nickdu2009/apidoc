@@ -287,8 +287,7 @@ paths:
         required: true
         description: 'The ID that uniquely identifies the parcel from the partner '
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Claim Web Portal URL
       responses:
         '200':
           description: OK
@@ -306,6 +305,8 @@ paths:
       description: Get Claim Web Portal URL by Transit ID
       security:
         - ApiKeyAuth: []
+      tags:
+        - trasnit
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
