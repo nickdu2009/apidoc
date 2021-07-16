@@ -306,7 +306,7 @@ paths:
       security:
         - ApiKeyAuth: []
       tags:
-        - trasnit
+        - transit
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
