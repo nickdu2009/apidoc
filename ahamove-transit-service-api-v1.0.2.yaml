@@ -4,7 +4,7 @@ info:
     This api doc contains 2 partsItem
     1. Api  is implemented by igloo
     2. WbHook Api is implemented by ahamove(The authentication method is defined by the partner)
-  version: 1.0.1
+  version: 1.0.2
   title: Ahamove Transit Service Api
   license:
     name: N/A
