@@ -390,6 +390,13 @@ securityDefinitions:
 definitions:
   Address:
     type: object
+    x-examples:
+      example-1:
+        formatted_address: string
+        address: 2 Havelock Road
+        city: Jakarta
+        country_code: ID
+        zip: '05225'
     properties:
       formatted_address:
         type: string
@@ -441,6 +448,38 @@ definitions:
   CreateTransitRequest:
     type: object
     description: ''
+    x-examples:
+      example-1:
+        transit_id: string
+        order_id: string
+        order_created_date: -9223372036854776000
+        order_paid_date: -9223372036854776000
+        order_currency: string
+        ship_from:
+          formatted_address: string
+          address: 2 Havelock Road
+          city: Jakarta
+          country_code: ID
+          zip: '05225'
+        ship_to:
+          formatted_address: string
+          address: 2 Havelock Road
+          city: Jakarta
+          country_code: ID
+          zip: '05225'
+        sender:
+          id: string
+          name: string
+          email: string
+          phone: string
+        receiver:
+          id: string
+          name: string
+          email: string
+          phone: string
+        item:
+          total_price: -1.7976931348623157e+308
+          premium: -1.7976931348623157e+308
     properties:
       transit_id:
         type: string
@@ -458,7 +497,7 @@ definitions:
         format: int64
       order_currency:
         type: string
-        description: Order payment time of parcel
+        description: Payment currency type of the parcel order
       ship_from:
         $ref: '#/definitions/Address'
       ship_to:
