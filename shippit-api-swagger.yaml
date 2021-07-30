@@ -57,7 +57,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       security:
-        - ApiKeyAuth: ["dasdadasda"]
+        - ApiKeyAuth: [ ]
 
   /claim/list:
     x-merger-tags: [ 'public' ]
