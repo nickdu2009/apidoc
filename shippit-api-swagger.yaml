@@ -44,11 +44,19 @@ paths:
           schema:
             $ref: '#/definitions/ShippitPolicyListRsp'
         400:
-          $ref: '#/definitions/Error'
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
         403:
-          $ref: '#/definitions/Error'
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
         default:
-          $ref: '#/definitions/Error'
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKeyAuth: [ ]
 
   /claim/list:
     x-merger-tags: [ 'public' ]
@@ -66,11 +74,19 @@ paths:
           schema:
             $ref: '#/definitions/ShippitClaimListRsp'
         400:
-          $ref: '#/definitions/Error'
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
         403:
-          $ref: '#/definitions/Error'
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
         default:
-          $ref: '#/definitions/Error'
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKeyAuth: [ ]
 
 definitions:
   ShippitPolicyListRsp:
