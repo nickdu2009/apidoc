@@ -1,0 +1,244 @@
+swagger: '2.0'
+
+info:
+  version: '0.1.1'
+  title: Shippit Transit External API
+  description: This api doc contains one part
+    1. Shippit API
+  license:
+    name: N/A
+
+schemes:
+  - https
+
+host: api.iglooinsure.com
+basePath: /v2/shippit/transit
+consumes:
+  - application/json
+produces:
+  - application/json
+
+tags:
+  - name: Shippit API
+    description: "external api for shippit to get policies/claims"
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: X-Axinan-Key
+paths:
+########## 1.Shippit API ##########
+  /policy/list:
+    x-merger-tags: [ 'public' ]
+    get:
+      summary: Shippit Policy List
+      tags:
+        - Shippit API
+      parameters:
+        - $ref: "#/parameters/AdminPolicyStartDateLowerFilterParam"
+        - $ref: "#/parameters/AdminPolicyStartDateUpperFilterParam"
+
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/ShippitPolicyListRsp'
+        400:
+          $ref: '#/definitions/Error'
+        403:
+          $ref: '#/definitions/Error'
+        default:
+          $ref: '#/definitions/Error'
+
+  /claim/list:
+    x-merger-tags: [ 'public' ]
+    get:
+      summary: Shippit Claim List
+      tags:
+        - Shippit API
+      parameters:
+        - $ref: "#/parameters/AdminClaimDateLowerFilterParam"
+        - $ref: "#/parameters/AdminClaimDateUpperFilterParam"
+
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/ShippitClaimListRsp'
+        400:
+          $ref: '#/definitions/Error'
+        403:
+          $ref: '#/definitions/Error'
+        default:
+          $ref: '#/definitions/Error'
+
+definitions:
+  ShippitPolicyListRsp:
+    type: object
+    properties:
+      records:
+        type: array
+        items:
+          $ref: '#/definitions/ShippitPolicyListRecord'
+      total:
+        type: integer
+        description: 'records total'
+
+  ShippitPolicyListRecord:
+    type: object
+    properties:
+      orderId:
+        type: string
+      shopId:
+        type: string
+        example: '1000000'
+      trackingNumber:
+        type: string
+        example: "123456789"
+      currency:
+        type: string
+      declareDate:
+        type: string
+      service:
+        type: string
+      policyId:
+        type: string
+        example: 'policy-id-123'
+      policyStatus:
+        type: string
+      premiumAmount:
+        type: number
+      coverageAmount:
+        type: number
+      validFrom:
+        type: string
+        example: "20210610"
+      expireAt:
+        type: string
+        example: "20210610"
+      3PL:
+        type: string
+        example: "xxxx"
+      itemName:
+        type: string
+      itemMainCategory:
+        type: string
+      itemSubCategory:
+        type: string
+      itemPrice:
+        type: number
+      itemQuantity:
+        type: integer
+      merchantId:
+        type: string
+      shopName:
+        type: string
+      buyerId:
+        type: string
+      buyerName:
+        type: string
+      buyerPhoneNo:
+        type: string
+      shipFrom:
+        type: string
+      shipTo:
+        type: string
+      shippingStatus:
+        type: string
+      shipmentDate:
+        type: string
+
+  ShippitClaimListRsp:
+    type: object
+    properties:
+      records:
+        type: array
+        items:
+          $ref: '#/definitions/ShippitClaimListRecord'
+      total:
+        type: integer
+        description: 'records total'
+
+  ShippitClaimListRecord:
+    type: object
+    properties:
+      orderId:
+        type: string
+      shopId:
+        type: string
+        example: '1000000'
+      currency:
+        type: string
+      claimId:
+        type: string
+        example: 'claim-id-123'
+      claimDate:
+        type: string
+      claimType:
+        type: string
+      claimStatus:
+        type: string
+      refundStatus:
+        type: string
+      rejectReason:
+        type: string
+      claimAmount:
+        type: number
+      refundAmount:
+        type: number
+      itemId:
+        type: string
+      itemSku:
+        type: string
+      itemQuantity:
+        type: integer
+      approvedDate:
+        type: string
+      processedDeadline:
+        type: string
+      paymentPending:
+        type: string
+      approvedBy:
+        type: string
+      approver:
+        type: string
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
+
+parameters:
+  AdminClaimDateLowerFilterParam:
+    name: claim_start_date_lower
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'unix timestamp'
+  AdminClaimDateUpperFilterParam:
+    name: claim_start_date_upper
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'unix timestamp'
+  AdminPolicyStartDateLowerFilterParam:
+    name: policy_start_date_lower
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'unix timestamp'
+  AdminPolicyStartDateUpperFilterParam:
+    name: policy_start_date_upper
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'unix timestamp'
