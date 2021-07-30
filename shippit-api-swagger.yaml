@@ -26,6 +26,7 @@ securityDefinitions:
     type: apiKey
     in: header
     name: X-Axinan-Key
+  
 paths:
 ########## 1.Shippit API ##########
   /policy/list:
@@ -56,7 +57,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       security:
-        - ApiKeyAuth: [ ]
+        - ApiKeyAuth: ["dasdadasda"]
 
   /claim/list:
     x-merger-tags: [ 'public' ]
