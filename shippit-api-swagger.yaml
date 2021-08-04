@@ -237,25 +237,25 @@ parameters:
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
   AdminClaimDateUpperFilterParam:
     name: claim_start_date_upper
     in: query
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
   AdminPolicyStartDateLowerFilterParam:
     name: policy_start_date_lower
     in: query
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
   AdminPolicyStartDateUpperFilterParam:
     name: policy_start_date_upper
     in: query
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
