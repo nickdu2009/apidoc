@@ -38,6 +38,8 @@ paths:
       parameters:
         - $ref: "#/parameters/AdminPolicyStartDateLowerFilterParam"
         - $ref: "#/parameters/AdminPolicyStartDateUpperFilterParam"
+        - $ref: "#/parameters/AdminPageParam"
+        - $ref: "#/parameters/AdminPageSizeParam"
 
       responses:
         200:
@@ -68,6 +70,8 @@ paths:
       parameters:
         - $ref: "#/parameters/AdminClaimDateLowerFilterParam"
         - $ref: "#/parameters/AdminClaimDateUpperFilterParam"
+        - $ref: "#/parameters/AdminPageParam"
+        - $ref: "#/parameters/AdminPageSizeParam"
 
       responses:
         200:
@@ -259,3 +263,16 @@ parameters:
     format: int64
     required: false
     description: 'millisecond unix timestamp'
+  AdminPageParam:
+    name: page
+    in: query
+    type: integer
+    minimum: 1
+    default: 1
+  AdminPageSizeParam:
+    name: page_size
+    in: query
+    type: integer
+    maximum: 10000
+    minimum: 10
+    default: 10
