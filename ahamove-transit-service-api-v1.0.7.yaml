@@ -238,7 +238,7 @@ paths:
               reimbursed_timestamp:
                 type: integer
                 format: int64
-                description: unix timestamp(second)
+                description: unix timestamp(millsecond)
             required:
               - reimbursed_timestamp
       security:
@@ -279,13 +279,17 @@ paths:
             x-examples:
               example-1:
                 reimburse_failed_timestamp: 0
+                reason: ''
             properties:
               reimburse_failed_timestamp:
                 type: integer
                 format: int64
-                description: unix timestamp(second)
+                description: unix timestamp(millsecond)
+              reason:
+                type: string
             required:
               - reimburse_failed_timestamp
+              - reason
       security:
         - ApiKeyAuth: []
   '/webhook/transits/{transit_id}':
