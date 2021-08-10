@@ -493,6 +493,11 @@ definitions:
           name: string
           email: string
           phone: string
+        booker:
+          id: string
+          name: string
+          email: string
+          phone: string
         receiver:
           id: string
           name: string
@@ -529,6 +534,8 @@ definitions:
         $ref: '#/definitions/Address'
       sender:
         $ref: '#/definitions/Sender'
+      booker:
+        $ref: '#/definitions/Booker'
       receiver:
         $ref: '#/definitions/Receiver'
       item:
@@ -648,6 +655,32 @@ definitions:
       phone:
         type: string
         description: The sender's phone number
+    required:
+      - id
+      - name
+      - phone
+  Booker:
+    title: Booker
+    type: object
+    x-examples:
+      example-1:
+        id: string
+        name: string
+        email: string
+        phone: string
+    properties:
+      id:
+        type: string
+        description: User ID of booker from partner
+      name:
+        type: string
+        description: The name of the booker
+      email:
+        type: string
+        description: The booker's email
+      phone:
+        type: string
+        description: The booker's phone number
     required:
       - id
       - name
