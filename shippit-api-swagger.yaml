@@ -94,6 +94,32 @@ paths:
         - ApiKeyAuth: [ ]
 
 definitions:
+  ClaimStatus:
+    type: string
+    enum:
+      - processing
+      - approved
+      - rejected
+      - cancelled
+  PolicyStatus:
+    type: string
+    enum:
+      - expired
+      - cancelled
+      - activated
+      - closed
+      - claimed
+  ClaimType:
+    type: string
+    enum:
+      - damage
+      - lost
+  RefundStatus:
+    type: string
+    enum:
+      - succeed
+      - failed
+      - pending
   ShippitPolicyListRsp:
     type: object
     properties:
@@ -126,7 +152,7 @@ definitions:
         type: string
         example: 'policy-id-123'
       policyStatus:
-        type: string
+        $ref: '#/definitions/PolicyStatus'
       premiumAmount:
         type: number
       coverageAmount:
@@ -196,11 +222,11 @@ definitions:
       claimDate:
         type: string
       claimType:
-        type: string
+        $ref: '#/definitions/ClaimType'
       claimStatus:
-        type: string
+        $ref: '#/definitions/ClaimStatus'
       refundStatus:
-        type: string
+        $ref: '#/definitions/RefundStatus'
       rejectReason:
         type: string
       claimAmount:
