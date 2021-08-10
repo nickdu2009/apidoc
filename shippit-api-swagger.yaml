@@ -166,6 +166,8 @@ definitions:
       3PL:
         type: string
         example: "xxxx"
+      itemId:
+        type: string
       itemName:
         type: string
       itemMainCategory:
