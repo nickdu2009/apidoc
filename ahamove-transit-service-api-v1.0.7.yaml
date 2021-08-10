@@ -684,6 +684,7 @@ definitions:
     required:
       - id
       - name
+      - email
       - phone
   Receiver:
     title: Receiver
