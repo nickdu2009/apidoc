@@ -506,7 +506,6 @@ definitions:
     required:
       - transit_id
       - order_id
-      - order_description
       - order_created_date
       - order_paid_date
       - order_currency
@@ -635,7 +634,6 @@ definitions:
     required:
       - id
       - name
-      - email
       - phone
   Receiver:
     title: Receiver
