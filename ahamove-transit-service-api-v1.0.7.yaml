@@ -464,7 +464,7 @@ definitions:
       order_id:
         type: string
         description: The order ID of the parcel
-      order_description:
+      parcel_description:
         type: string
       order_created_date:
         type: integer
@@ -606,8 +606,6 @@ definitions:
         type: string
         description: The sender's phone number
     required:
-      - id
-      - name
       - phone
   Booker:
     title: Booker
