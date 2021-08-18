@@ -38,6 +38,8 @@ paths:
       parameters:
         - $ref: "#/parameters/AdminPolicyStartDateLowerFilterParam"
         - $ref: "#/parameters/AdminPolicyStartDateUpperFilterParam"
+        - $ref: "#/parameters/AdminPageParam"
+        - $ref: "#/parameters/AdminPageSizeParam"
 
       responses:
         200:
@@ -68,6 +70,8 @@ paths:
       parameters:
         - $ref: "#/parameters/AdminClaimDateLowerFilterParam"
         - $ref: "#/parameters/AdminClaimDateUpperFilterParam"
+        - $ref: "#/parameters/AdminPageParam"
+        - $ref: "#/parameters/AdminPageSizeParam"
 
       responses:
         200:
@@ -90,6 +94,32 @@ paths:
         - ApiKeyAuth: [ ]
 
 definitions:
+  ClaimStatus:
+    type: string
+    enum:
+      - processing
+      - approved
+      - rejected
+      - cancelled
+  PolicyStatus:
+    type: string
+    enum:
+      - expired
+      - cancelled
+      - activated
+      - closed
+      - claimed
+  ClaimType:
+    type: string
+    enum:
+      - damage
+      - lost
+  RefundStatus:
+    type: string
+    enum:
+      - succeed
+      - failed
+      - pending
   ShippitPolicyListRsp:
     type: object
     properties:
@@ -122,7 +152,7 @@ definitions:
         type: string
         example: 'policy-id-123'
       policyStatus:
-        type: string
+        $ref: '#/definitions/PolicyStatus'
       premiumAmount:
         type: number
       coverageAmount:
@@ -136,6 +166,8 @@ definitions:
       3PL:
         type: string
         example: "xxxx"
+      itemId:
+        type: string
       itemName:
         type: string
       itemMainCategory:
@@ -192,11 +224,11 @@ definitions:
       claimDate:
         type: string
       claimType:
-        type: string
+        $ref: '#/definitions/ClaimType'
       claimStatus:
-        type: string
+        $ref: '#/definitions/ClaimStatus'
       refundStatus:
-        type: string
+        $ref: '#/definitions/RefundStatus'
       rejectReason:
         type: string
       claimAmount:
@@ -237,25 +269,38 @@ parameters:
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
   AdminClaimDateUpperFilterParam:
     name: claim_start_date_upper
     in: query
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
   AdminPolicyStartDateLowerFilterParam:
     name: policy_start_date_lower
     in: query
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
   AdminPolicyStartDateUpperFilterParam:
     name: policy_start_date_upper
     in: query
     type: integer
     format: int64
     required: false
-    description: 'unix timestamp'
+    description: 'millisecond unix timestamp'
+  AdminPageParam:
+    name: page
+    in: query
+    type: integer
+    minimum: 1
+    default: 1
+  AdminPageSizeParam:
+    name: page_size
+    in: query
+    type: integer
+    maximum: 10000
+    minimum: 10
+    default: 10

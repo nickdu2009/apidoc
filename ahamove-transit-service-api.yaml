@@ -1,459 +1,255 @@
 swagger: '2.0'
+
 info:
-  description: |-
-    This api doc contains 2 partsItem
-    1. Api  is implemented by igloo
-    2. WbHook Api is implemented by ahamove(The authentication method is defined by the partner)
-  version: 1.0.0
-  title: Ahamove Transit Service Api
+  version: '0.1.1'
+  title: Shippit Transit External API
+  description: This api doc contains one part
+    1. Shippit API
   license:
     name: N/A
-  contact:
-    name: nick.du
-    email: nick.du@iglooinsure.com
-host: api.staging.iglooinsure.com
-basePath: /v1/transit-ahamove/partner
+
 schemes:
   - https
+
+host: api.iglooinsure.com
+basePath: /v2/shippit/transit
 consumes:
   - application/json
 produces:
   - application/json
-paths:
-  /transits:
-    post:
-      parameters:
-        - in: body
-          name: CreatePolicyRequest
-          required: false
-          schema:
-            $ref: '#/definitions/CreateTransitRequest'
-          x-examples:
-            example-1:
-              driver_id: string
-              name: string
-              address: string
-              id: string
-              purchased_timestamp: 0
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/CreateTransitResponse'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Error'
-        '403':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unknown Error
-          schema:
-            $ref: '#/definitions/Error'
-      operationId: Create Transit
-      description: 'Through the API, Ahamove send the parcel data to igloo to create insurance policies'
-      security:
-        - ApiKeyAuth: []
-      tags:
-        - transit
-    parameters: []
-  '/transits/{transit_id}':
-    get:
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/GetTransitResponse'
-          examples:
-            example-1:
-              policy:
-                state: Issued
-                claim_period_end_timestamp: 0
-                purchased_timestamp: 0
-                policy_start_date: 0
-                policy_end_date: 0
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Error'
-        '403':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unknown Error
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKeyAuth: []
-      operationId: Get Transit
-      description: Get Transit
-      tags:
-        - transit
-    parameters:
-      - type: string
-        name: transit_id
-        in: path
-        description: 'The ID that uniquely identifies the parcel from the partner '
-        required: true
-    put:
-      summary: ''
-      operationId: Update Transit
-      responses:
-        '200':
-          description: OK
-      description: Update Transit
-      security:
-        - ApiKeyAuth: []
-      parameters:
-        - in: body
-          name: body
-          schema:
-            type: object
-            properties:
-              parcel_status:
-                $ref: '#/definitions/ParcelStatus'
-      tags:
-        - transit
-  '/transits/{transit_id}/claims':
-    get:
-      summary: Get Claim list
-      parameters: []
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/GetClaimsResponse'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Error'
-        '403':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unknown Error
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKeyAuth: []
-      operationId: Get claim list of transit
-      description: Get claim list of transit
-      tags:
-        - claim
-    parameters:
-      - type: string
-        name: transit_id
-        in: path
-        required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
-  '/claims/{claim_id}':
-    get:
-      summary: Get Claim
-      parameters:
-        - name: claim_id
-          in: path
-          required: true
-          type: string
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/GetClaimResponse'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Error'
-        '403':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unknown Error
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKeyAuth: []
-      tags:
-        - claim
-      description: Get Claim
-      operationId: Get Claim
-    parameters:
-      - type: string
-        name: claim_id
-        in: path
-        required: true
-        description: Claim ID of igloo
-  '/claims/{claim_id}/reimburse':
-    parameters:
-      - type: string
-        name: claim_id
-        in: path
-        required: true
-        description: Claim ID of igloo
-    put:
-      summary: ''
-      operationId: Approved Claim Reimburse
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: object
-            properties:
-              claim:
-                $ref: '#/definitions/Claim'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Error'
-        '401':
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/Error'
-      tags:
-        - claim
-      description: The partner calls the api to notify igloo after completing the approved claim payment
-      parameters:
-        - in: body
-          name: body
-          schema:
-            description: ''
-            type: object
-            x-examples:
-              example-1:
-                reimbursed_timestamp: 0
-            properties:
-              reimbursed_timestamp:
-                type: integer
-                format: int64
-                description: unix timestamp(second)
-            required:
-              - reimbursed_timestamp
-      security:
-        - ApiKeyAuth: []
-  '/webhook/transits/{transit_id}':
-    parameters:
-      - type: string
-        name: transit_id
-        in: path
-        required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
-    put:
-      summary: ''
-      operationId: Notify Policy State Change
-      responses:
-        '200':
-          description: OK
-      description: Notify Policy State Change
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/NotifyPolicy'
-          description: ''
-      tags:
-        - webhook
-  '/webhook/claims/{claim_id}':
-    parameters:
-      - type: string
-        name: claim_id
-        in: path
-        required: true
-        description: Claim ID of igloo
-    put:
-      summary: ''
-      operationId: Notify Claim State Change
-      responses:
-        '200':
-          description: OK
-      description: Notify Claim State Change
-      security:
-        - ApiKeyAuth: []
-      parameters:
-        - in: body
-          name: body
-          schema:
-            $ref: '#/definitions/NotifyClaim'
-      tags:
-        - webhook
+
+tags:
+  - name: Shippit API
+    description: "external api for shippit to get policies/claims"
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
-    name: X-Axinan-Key
     in: header
+    name: X-Axinan-Key
+  
+paths:
+########## 1.Shippit API ##########
+  /policy/list:
+    x-merger-tags: [ 'public' ]
+    get:
+      summary: Shippit Policy List
+      tags:
+        - Shippit API
+      parameters:
+        - $ref: "#/parameters/AdminPolicyStartDateLowerFilterParam"
+        - $ref: "#/parameters/AdminPolicyStartDateUpperFilterParam"
+        - $ref: "#/parameters/AdminPageParam"
+        - $ref: "#/parameters/AdminPageSizeParam"
+
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/ShippitPolicyListRsp'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKeyAuth: [ ]
+
+  /claim/list:
+    x-merger-tags: [ 'public' ]
+    get:
+      summary: Shippit Claim List
+      tags:
+        - Shippit API
+      parameters:
+        - $ref: "#/parameters/AdminClaimDateLowerFilterParam"
+        - $ref: "#/parameters/AdminClaimDateUpperFilterParam"
+        - $ref: "#/parameters/AdminPageParam"
+        - $ref: "#/parameters/AdminPageSizeParam"
+
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/ShippitClaimListRsp'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKeyAuth: [ ]
+
 definitions:
-  Address:
+  ClaimStatus:
+    type: string
+    enum:
+      - processing
+      - approved
+      - rejected
+      - cancelled
+  PolicyStatus:
+    type: string
+    enum:
+      - expired
+      - cancelled
+      - activated
+      - closed
+      - claimed
+  ClaimType:
+    type: string
+    enum:
+      - damage
+      - lost
+  RefundStatus:
+    type: string
+    enum:
+      - succeed
+      - failed
+      - pending
+  ShippitPolicyListRsp:
     type: object
     properties:
-      formatted_address:
-        type: string
-        description: Full Address
-      address:
-        type: string
-        example: 2 Havelock Road
-        description: Mailing address
-      city:
-        type: string
-        example: Jakarta
-        description: 'The city, town, or village.'
-      country_code:
-        type: string
-        example: ID
-        description: The two-letter country code corresponding to the  country.
-      zip:
-        type: string
-        example: '05225'
-        description: 'The  postal code, also known as zip, postcode, Eircode, etc.'
-    required:
-      - formatted_address
-  Policy:
-    type: object
-    properties:
-      state:
-        $ref: '#/definitions/PolicyState'
-      claim_period_end_timestamp:
-        type: integer
-        format: int64
-        description: unix timestamp(sec) of claim period end
-      purchased_timestamp:
-        type: integer
-        format: int64
-        description: unix timestamp(sec) of purchase policy
-      policy_start_timestamp:
-        type: integer
-        format: int64
-        description: unix timestamp(sec)  of  The start date of the policy corresponding to the parcel
-      policy_end_timestamp:
-        type: integer
-        format: int64
-        description: unix timestamp(sec) of The end date of the policy corresponding to the parcel
-  NotifyPolicy:
-    type: object
-    properties:
-      state:
-        $ref: '#/definitions/PolicyState'
-  CreateTransitRequest:
-    type: object
-    description: ''
-    properties:
-      transit_id:
-        type: string
-        description: 'The ID that uniquely identifies the parcel from the partner '
-      order_id:
-        type: string
-        description: The order ID of the parcel
-      order_created_date:
-        type: integer
-        description: 'unix timestamp(sec) of Order created time of parcel '
-        format: int64
-      order_paid_date:
-        type: integer
-        description: unix timestamp(sec) of Order payment time of parcel
-        format: int64
-      order_currency:
-        type: string
-        description: Order payment time of parcel
-      ship_from:
-        $ref: '#/definitions/Address'
-      ship_to:
-        $ref: '#/definitions/Address'
-      sender:
-        $ref: '#/definitions/Sender'
-      receiver:
-        $ref: '#/definitions/Receiver'
-      item:
-        type: object
-        properties:
-          total_price:
-            type: number
-            format: double
-            description: total price of item
-          premium:
-            type: number
-            format: double
-            description: premium of item
-          billing_pictures:
-            type: array
-            description: Billing pictures url b merchant
-            items:
-              type: string
-          product_pictures:
-            type: array
-            description: Products pictures url taken by driver
-            items:
-              type: string
-    required:
-      - transit_id
-      - order_id
-      - order_created_date
-      - order_paid_date
-      - order_currency
-  CreateTransitResponse:
-    type: object
-    properties:
-      policy:
-        $ref: '#/definitions/Policy'
-  GetTransitResponse:
-    type: object
-    properties:
-      policy:
-        $ref: '#/definitions/Policy'
-  Claim:
-    type: object
-    properties:
-      id:
-        type: string
-        description: claim id of igloo
-      state:
-        $ref: '#/definitions/ClaimState'
-      approved_amount:
-        type: number
-        format: float
-        description: This field is only valid when the claim is approved
-      claimed_amount:
-        type: number
-        format: float
-      claim_type:
-        $ref: '#/definitions/ClaimType'
-  NotifyClaim:
-    type: object
-    properties:
-      state:
-        $ref: '#/definitions/ClaimState'
-      transit_id:
-        type: string
-        description: 'The ID that uniquely identifies the parcel from the partner '
-  GetClaimResponse:
-    type: object
-    properties:
-      claim:
-        $ref: '#/definitions/Claim'
-  GetClaimsResponse:
-    type: object
-    properties:
-      claims:
+      records:
         type: array
         items:
-          $ref: '#/definitions/Claim'
-  ClaimState:
-    type: string
-    enum:
-      - Requested
-      - Approved
-      - Rejected
-      - Pending Proof
-      - Cancelled
-  PolicyState:
-    type: string
-    enum:
-      - Issued
-      - Activated
-      - Ended
-      - Expired
-      - Cancelled
+          $ref: '#/definitions/ShippitPolicyListRecord'
+      total:
+        type: integer
+        description: 'records total'
+
+  ShippitPolicyListRecord:
+    type: object
+    properties:
+      orderId:
+        type: string
+      shopId:
+        type: string
+        example: '1000000'
+      trackingNumber:
+        type: string
+        example: "123456789"
+      currency:
+        type: string
+      declareDate:
+        type: string
+      service:
+        type: string
+      policyId:
+        type: string
+        example: 'policy-id-123'
+      policyStatus:
+        $ref: '#/definitions/PolicyStatus'
+      premiumAmount:
+        type: number
+      coverageAmount:
+        type: number
+      validFrom:
+        type: string
+        example: "20210610"
+      expireAt:
+        type: string
+        example: "20210610"
+      3PL:
+        type: string
+        example: "xxxx"
+      itemName:
+        type: string
+      itemMainCategory:
+        type: string
+      itemSubCategory:
+        type: string
+      itemPrice:
+        type: number
+      itemQuantity:
+        type: integer
+      merchantId:
+        type: string
+      shopName:
+        type: string
+      buyerId:
+        type: string
+      buyerName:
+        type: string
+      buyerPhoneNo:
+        type: string
+      shipFrom:
+        type: string
+      shipTo:
+        type: string
+      shippingStatus:
+        type: string
+      shipmentDate:
+        type: string
+
+  ShippitClaimListRsp:
+    type: object
+    properties:
+      records:
+        type: array
+        items:
+          $ref: '#/definitions/ShippitClaimListRecord'
+      total:
+        type: integer
+        description: 'records total'
+
+  ShippitClaimListRecord:
+    type: object
+    properties:
+      orderId:
+        type: string
+      shopId:
+        type: string
+        example: '1000000'
+      currency:
+        type: string
+      claimId:
+        type: string
+        example: 'claim-id-123'
+      claimDate:
+        type: string
+      claimType:
+        $ref: '#/definitions/ClaimType'
+      claimStatus:
+        $ref: '#/definitions/ClaimStatus'
+      refundStatus:
+        $ref: '#/definitions/RefundStatus'
+      rejectReason:
+        type: string
+      claimAmount:
+        type: number
+      refundAmount:
+        type: number
+      itemId:
+        type: string
+      itemSku:
+        type: string
+      itemQuantity:
+        type: integer
+      approvedDate:
+        type: string
+      processedDeadline:
+        type: string
+      paymentPending:
+        type: string
+      approvedBy:
+        type: string
+      approver:
+        type: string
+
   Error:
     type: object
     properties:
@@ -463,147 +259,46 @@ definitions:
       message:
         type: string
         description: Detailed description of the error
-  Sender:
-    title: Sender
-    type: object
-    x-examples:
-      example-1:
-        id: string
-        name: string
-        email: string
-        phone: string
-    properties:
-      id:
-        type: string
-        description: User ID of sender from partner
-      name:
-        type: string
-        description: The name of the sender
-      email:
-        type: string
-        description: The sender's email
-      phone:
-        type: string
-        description: The sender's phone number
-    required:
-      - id
-      - name
-      - email
-      - phone
-  Receiver:
-    title: Receiver
-    type: object
-    properties:
-      id:
-        type: string
-        description: User ID of sender from partner
-      name:
-        type: string
-        description: The name of the sender
-      email:
-        type: string
-        description: The sender's email
-      phone:
-        type: string
-        description: The sender's phone number
-    required:
-      - email
-      - phone
-  Item:
-    title: Item
-    type: object
-    properties:
-      total_price:
-        type: string
-        description: Total price of Item
-      billing_pictures:
-        type: array
-        description: Billing picture taken by Merchant
-        items:
-          type: string
-      product_pictures:
-        type: array
-        description: Products Pic taken by Driver
-        items:
-          type: string
-    required:
-      - total_price
-      - billing_pictures
-      - product_pictures
-    description: Goods Info
-  ParcelStatus:
-    title: ParcelStatus
-    type: object
-    properties:
-      status:
-        type: string
-        description: Status of the parcel from the partner
-      status_at_date_timestamp:
-        type: integer
-        format: int64
-        description: Date/time of parcel update to status(unix timestamp(second))
-      location:
-        type: string
-        description: Location of the parcel from partner
-      remarks_or_failed_reason:
-        type: string
-        description: Remarks from the partner
-    required:
-      - status
-      - status_at_date_timestamp
-  ClaimType:
-    type: string
-    title: ClaimType
-    enum:
-      - Lost
-      - Damage
-parameters: {}
-responses:
-  errBadRequestResponse:
-    description: Bad Request
-    schema:
-      $ref: '#/definitions/Error'
-  errUnauthorizedResponse:
-    description: Unauthorized
-    schema:
-      $ref: '#/definitions/Error'
-  errRequestFailedResponse:
-    description: Request Failed
-    schema:
-      $ref: '#/definitions/Error'
-  errForbiddenResponse:
-    description: Forbidden
-    schema:
-      $ref: '#/definitions/Error'
-  errNotFoundResponse:
-    description: Not found
-    schema:
-      $ref: '#/definitions/Error'
-  errConflictResponse:
-    description: Conflict
-    schema:
-      $ref: '#/definitions/Error'
-  errTooManyRequestsResponse:
-    description: Too Many Requests
-    schema:
-      $ref: '#/definitions/Error'
-  errServerErrorsResponse:
-    description: Server Errors
-    schema:
-      $ref: '#/definitions/Error'
-  defaultErrorResponse:
-    description: Unknown Error
-    schema:
-      $ref: '#/definitions/Error'
-  healthCheckResponse:
-    description: Server health status
-    schema:
-      type: string
-      example: OK
-  simpleStringResponse:
-    description: Simple String Response
-    schema:
-      type: string
-      example: OK
-security:
-  - ApiKeyAuth: []
+
+parameters:
+  AdminClaimDateLowerFilterParam:
+    name: claim_start_date_lower
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'millisecond unix timestamp'
+  AdminClaimDateUpperFilterParam:
+    name: claim_start_date_upper
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'millisecond unix timestamp'
+  AdminPolicyStartDateLowerFilterParam:
+    name: policy_start_date_lower
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'millisecond unix timestamp'
+  AdminPolicyStartDateUpperFilterParam:
+    name: policy_start_date_upper
+    in: query
+    type: integer
+    format: int64
+    required: false
+    description: 'millisecond unix timestamp'
+  AdminPageParam:
+    name: page
+    in: query
+    type: integer
+    minimum: 1
+    default: 1
+  AdminPageSizeParam:
+    name: page_size
+    in: query
+    type: integer
+    maximum: 10000
+    minimum: 10
+    default: 10
