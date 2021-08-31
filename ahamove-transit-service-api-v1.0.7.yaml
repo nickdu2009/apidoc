@@ -316,6 +316,44 @@ paths:
         - ApiKeyAuth: []
       tags:
         - transit
+  '/transits/multi_cancel':
+    parameters:
+      - in: body
+        name: transit_ids
+        schema:
+          type: array
+          items:
+            type: string
+    put:
+      summary: Cancel Multi Policies
+      tags:
+        - transit
+      operationId: Cancel Multi Policies
+      description: Cancel Multi Policies
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                description: 'true: success; false: fail'
+              reason:
+                type: string
+                description: 'fail_reason if cancel failed'
+              policy:
+                $ref: '#/definitions/Policy'
+        '400':
+          $ref: '#/responses/errBadRequestResponse'
+        '403':
+          $ref: '#/responses/errForbiddenResponse'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
   '/transits/{transit_id}/cancel':
     parameters:
       - type: string
