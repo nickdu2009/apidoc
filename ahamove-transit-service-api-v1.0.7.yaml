@@ -318,9 +318,9 @@ paths:
         - transit
   '/transits/multi_cancel':
     parameters:
-      - type: string
+      - in: body
         name: order_id
-        in: query
+        type: string
         required: true
     put:
       summary: Cancel Multi Policies
