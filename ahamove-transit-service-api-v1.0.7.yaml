@@ -316,14 +316,12 @@ paths:
         - ApiKeyAuth: []
       tags:
         - transit
-  '/transits/multi_cancel':
+  '/transits/{order_id}/multi_cancel':
     parameters:
-      - in: body
-        name: transit_ids
-        schema:
-          type: array
-          items:
-            type: string
+      - type: string
+        name: order_id
+        in: path
+        required: true
     put:
       summary: Cancel Multi Policies
       tags:
