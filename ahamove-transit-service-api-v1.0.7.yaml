@@ -381,13 +381,8 @@ definitions:
             type: number
             format: double
             description: total price of item
-          premium:
-            type: number
-            format: double
-            description: Premium calculated by partner
         required:
           - total_price
-          - premium
     required:
       - transit_id
       - tracking_number
@@ -466,6 +461,10 @@ definitions:
         order_created_date: -9223372036854776000
         order_paid_date: -9223372036854776000
         order_currency: string
+        premium:
+          type: number
+          format: double
+          description: Premium calculated by partner
         transit_id: string
         tracking_number: string
         ship_from:
@@ -497,7 +496,6 @@ definitions:
           phone: string
         item:
           total_price: -1.7976931348623157e+308
-          premium: -1.7976931348623157e+308
     properties:
       order_id:
         type: string
