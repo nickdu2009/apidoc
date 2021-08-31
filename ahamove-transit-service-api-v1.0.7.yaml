@@ -439,10 +439,6 @@ definitions:
         type: integer
         format: int64
         description: unix timestamp(sec) of The end date of the policy corresponding to the parcel
-      premium:
-        type: number
-        format: double
-        description: Premium calculated by Iglooinsure
       url:
         type: string
         description: 'Use a browser or webview to open the URL and enter the igloo claim web portal to submit claim'
@@ -527,6 +523,10 @@ definitions:
   CreateTransitResponse:
     type: object
     properties:
+      premium:
+        type: number
+        format: double
+        description: Premium calculated by Iglooinsure
       results:
         type: array
         items:
