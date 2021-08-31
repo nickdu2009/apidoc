@@ -316,27 +316,32 @@ paths:
         - ApiKeyAuth: []
       tags:
         - transit
-  '/transits/{transit_id}/cancel':
+  '/transits/multi_cancel':
     parameters:
-      - type: string
-        name: transit_id
-        in: path
+      - in: body
+        name: order_id
+        type: string
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
     put:
-      summary: Cancel Policy Of Transit
+      summary: Cancel Multi Policies
       tags:
         - transit
-      operationId: Cancel Policy Of Transit
-      description: Cancel Policy Of Transit
+      operationId: Cancel Multi Policies
+      description: Cancel Multi Policies
       security:
-        - ApiKeyAuth: []
+        - ApiKeyAuth: [ ]
       responses:
         '200':
           description: OK
           schema:
             type: object
             properties:
+              success:
+                type: boolean
+                description: 'true: success; false: fail'
+              reason:
+                type: string
+                description: 'fail_reason if cancel failed'
               policy:
                 $ref: '#/definitions/Policy'
         '400':
@@ -381,13 +386,8 @@ definitions:
             type: number
             format: double
             description: total price of item
-          premium:
-            type: number
-            format: double
-            description: Premium calculated by partner
         required:
           - total_price
-          - premium
     required:
       - transit_id
       - tracking_number
@@ -444,10 +444,6 @@ definitions:
         type: integer
         format: int64
         description: unix timestamp(sec) of The end date of the policy corresponding to the parcel
-      premium:
-        type: number
-        format: double
-        description: Premium calculated by Iglooinsure
       url:
         type: string
         description: 'Use a browser or webview to open the URL and enter the igloo claim web portal to submit claim'
@@ -466,6 +462,10 @@ definitions:
         order_created_date: -9223372036854776000
         order_paid_date: -9223372036854776000
         order_currency: string
+        premium:
+          type: number
+          format: double
+          description: Premium calculated by partner
         transit_id: string
         tracking_number: string
         ship_from:
@@ -497,7 +497,6 @@ definitions:
           phone: string
         item:
           total_price: -1.7976931348623157e+308
-          premium: -1.7976931348623157e+308
     properties:
       order_id:
         type: string
@@ -529,6 +528,10 @@ definitions:
   CreateTransitResponse:
     type: object
     properties:
+      premium:
+        type: number
+        format: double
+        description: Premium calculated by Iglooinsure
       results:
         type: array
         items:
