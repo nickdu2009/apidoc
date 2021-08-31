@@ -316,11 +316,11 @@ paths:
         - ApiKeyAuth: []
       tags:
         - transit
-  '/transits/{order_id}/multi_cancel':
+  '/transits/multi_cancel':
     parameters:
       - type: string
         name: order_id
-        in: path
+        in: query
         required: true
     put:
       summary: Cancel Multi Policies
