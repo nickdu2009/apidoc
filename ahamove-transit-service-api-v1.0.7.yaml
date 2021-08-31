@@ -352,37 +352,6 @@ paths:
           description: Unknown Error
           schema:
             $ref: '#/definitions/Error'
-  '/transits/{transit_id}/cancel':
-    parameters:
-      - type: string
-        name: transit_id
-        in: path
-        required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
-    put:
-      summary: Cancel Policy Of Transit
-      tags:
-        - transit
-      operationId: Cancel Policy Of Transit
-      description: Cancel Policy Of Transit
-      security:
-        - ApiKeyAuth: []
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: object
-            properties:
-              policy:
-                $ref: '#/definitions/Policy'
-        '400':
-          $ref: '#/responses/errBadRequestResponse'
-        '403':
-          $ref: '#/responses/errForbiddenResponse'
-        default:
-          description: Unknown Error
-          schema:
-            $ref: '#/definitions/Error'
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
