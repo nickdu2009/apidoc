@@ -318,18 +318,19 @@ paths:
         - transit
   '/transits/multi_cancel':
     put:
+      summary: Cancel Multi Policies Of An Order
+      tags:
+        - transit
+      operationId: Cancel Multi Policies Of An Order
+      description: Cancel Multi Policies Of An Order
+      security:
+        - ApiKeyAuth: [ ]
       parameters:
         - in: body
           name: order_id
-          type: string
+          schema:
+            $ref: '#/definitions/TransitsMultiCancel'
           required: true
-      summary: Cancel Multi Policies
-      tags:
-        - transit
-      operationId: Cancel Multi Policies
-      description: Cancel Multi Policies
-      security:
-        - ApiKeyAuth: [ ]
       responses:
         '200':
           description: OK
@@ -565,6 +566,12 @@ definitions:
         format: float
       claim_type:
         $ref: '#/definitions/ClaimType'
+  TransitsMultiCancel:
+    type: object
+    properties:
+      order_id:
+        type: string
+        description: order id of ahamove
   NotifyClaim:
     type: object
     properties:
