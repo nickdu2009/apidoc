@@ -317,12 +317,12 @@ paths:
       tags:
         - transit
   '/transits/multi_cancel':
-    parameters:
-      - in: body
-        name: order_id
-        type: string
-        required: true
     put:
+      parameters:
+        - in: body
+          name: order_id
+          type: string
+          required: true
       summary: Cancel Multi Policies
       tags:
         - transit
@@ -514,6 +514,10 @@ definitions:
         description: Payment currency type of the order
         enum:
           - VND
+      premium:
+        type: number
+        format: double
+        description: Premium calculated by partner
       transits:
         type: array
         description: Detail info for parcels
