@@ -465,7 +465,7 @@ definitions:
         premium:
           type: number
           format: double
-          description: Premium calculated by partner
+          description: Premium calculated by partner (order_level)
         transit_id: string
         tracking_number: string
         ship_from:
