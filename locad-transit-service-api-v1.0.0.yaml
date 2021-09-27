@@ -181,6 +181,7 @@ definitions:
       - inbound_date_timestamp
       - product_name
       - product_category
+      - sku_condition
       - sku_status
       - unit_price
       - quantity
@@ -252,6 +253,7 @@ definitions:
       - sku_id
       - lot_no._tracking
       - outbound_date_timestamp
+      - sku_condition
       - product_name
       - product_category
       - sku_status
@@ -329,6 +331,7 @@ definitions:
       - sku_id
       - lot_no._tracking
       - lost_date_timestamp
+      - sku_condition
       - product_name
       - product_category
       - sku_status
