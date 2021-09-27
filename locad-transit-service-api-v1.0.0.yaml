@@ -1,0 +1,362 @@
+swagger: '2.0'
+info:
+  description: |-
+    This api doc contains 2 partsItem
+    1. Api  is implemented by igloo
+    2. WbHook Api is implemented by locad(The authentication method is defined by the partner)
+  version: 1.0.0
+  title: Locad Transit Service Api
+  license:
+    name: N/A
+  contact:
+    name: nick.du
+    email: nick.du@iglooinsure.com
+host: api.staging.iglooinsure.com
+basePath: /v1/transit-locad/partner
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /stock_inbound:
+    post:
+      parameters:
+        - in: body
+          name: StockInboundRequest
+          required: false
+          schema:
+            $ref: '#/definitions/StockInboundRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/StockInboundResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      operationId: Warehouse Stock Inbound
+      description: 'Through the API, partners send the inbound data to igloo'
+      security:
+        - ApiKeyAuth: [ ]
+      tags:
+        - transit
+      summary: Stock Inbound
+
+  /stock_outbound:
+    post:
+      parameters:
+        - in: body
+          name: StockInboundRequest
+          required: false
+          schema:
+            $ref: '#/definitions/StockOutboundRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/StockOutboundResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      operationId: Warehouse Stock Inbound
+      description: 'Through the API, partners send the inbound data to igloo'
+      security:
+        - ApiKeyAuth: [ ]
+      tags:
+        - transit
+      summary: Stock Inbound
+
+  /stock_lost:
+    post:
+      parameters:
+        - in: body
+          name: StockInboundRequest
+          required: false
+          schema:
+            $ref: '#/definitions/StockLostRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/StockLostResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      operationId: Warehouse Stock Inbound
+      description: 'Through the API, partners send the inbound data to igloo'
+      security:
+        - ApiKeyAuth: [ ]
+      tags:
+        - transit
+      summary: Stock Inbound
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Axinan-Key
+    in: header
+
+definitions:
+  StockInboundRequest:
+    type: object
+    properties:
+      sku_id:
+        type: string
+        description: 'SKU ID of product'
+      item_id:
+        type: string
+        description: 'Item ID of product'
+      sn:
+        type: string
+        description: 'Series No. of product, if any'
+      lot_no._tracking:
+        type: string
+        description: 'Lot No. Tracking of product'
+      inbound_date_timestamp:
+        type: integer
+        format: int64
+        description: 'Inbound data/time of product (timestamp in seconds)'
+      product_name:
+        type: string
+        description: 'The name of product'
+      product_category:
+        type: string
+        description: 'The category of product'
+      sku_condition:
+        type: string
+        description: 'The description of product condition while inbound'
+      sku_status:
+        type: string
+        description: 'The status of SKU/Item'
+      unit_price:
+        type: number
+        format: double
+        description: 'The Unit Price of per SKU/Item'
+      quantity:
+        type: integer
+        format: int64
+        description: 'The inbound quantity of SKU'
+      umo:
+        type: string
+        description: 'The unit of measure of SKU'
+      merchant_info:
+        $ref: '#/definitions/MerchantInfo'
+        description: 'The information of merchants'
+      logistics_info:
+        $ref: '#/definitions/LogisticsInfo'
+        description: 'The information of logistics used to shipping the SKUs'
+      warehouse:
+        $ref: '#/definitions/WarehouseInfo'
+        description: 'The information of warehouse that SKUs outbound'
+
+  StockInboundResponse:
+    type: object
+
+  StockOutboundRequest:
+    type: object
+    properties:
+      sku_id:
+        type: string
+        description: 'SKU ID of product'
+      item_id:
+        type: string
+        description: 'Item ID of product'
+      sn:
+        type: string
+        description: 'Series No. of product, if any'
+      lot_no._tracking:
+        type: string
+        description: 'Lot No. Tracking of product'
+      inbound_date_timestamp:
+        type: integer
+        format: int64
+        description: 'Inbound data/time of product (timestamp in seconds)'
+      outbound_date_timestamp:
+        type: integer
+        format: int64
+        description: 'Outbound data/time of product (timestamp in seconds)'
+      product_name:
+        type: string
+        description: 'The name of product'
+      product_category:
+        type: string
+        description: 'The category of product'
+      sku_condition:
+        type: string
+        description: 'The description of product condition while inbound'
+      sku_status:
+        type: string
+        description: 'The status of SKU/Item'
+      unit_price:
+        type: number
+        format: double
+        description: 'The Unit Price of per SKU/Item'
+      quantity:
+        type: integer
+        format: int64
+        description: 'The inbound quantity of SKU'
+      umo:
+        type: string
+        description: 'The unit of measure of SKU'
+      merchant_info:
+        $ref: '#/definitions/MerchantInfo'
+        description: 'The information of merchants'
+      logistics_info:
+        $ref: '#/definitions/LogisticsInfo'
+        description: 'The information of logistics used to shipping the SKUs'
+      warehouse:
+        $ref: '#/definitions/WarehouseInfo'
+        description: 'The information of warehouse that SKUs outbound'
+
+  StockOutboundResponse:
+    type: object
+
+  StockLostRequest:
+    type: object
+    properties:
+      sku_id:
+        type: string
+        description: 'SKU ID of product'
+      item_id:
+        type: string
+        description: 'Item ID of product'
+      sn:
+        type: string
+        description: 'Series No. of product, if any'
+      lot_no._tracking:
+        type: string
+        description: 'Lot No. Tracking of product'
+      inbound_date_timestamp:
+        type: integer
+        format: int64
+        description: 'Inbound data/time of product (timestamp in seconds)'
+      outbound_date_timestamp:
+        type: integer
+        format: int64
+        description: 'Outbound data/time of product (timestamp in seconds)'
+      lost_date_timestamp:
+        type: integer
+        format: int64
+        description: 'Lost data/time of product (timestamp in seconds)'
+      product_name:
+        type: string
+        description: 'The name of product'
+      product_category:
+        type: string
+        description: 'The category of product'
+      sku_condition:
+        type: string
+        description: 'The description of product condition while inbound'
+      sku_status:
+        type: string
+        description: 'The status of SKU/Item'
+      unit_price:
+        type: number
+        format: double
+        description: 'The Unit Price of per SKU/Item'
+      quantity:
+        type: integer
+        format: int64
+        description: 'The inbound quantity of SKU'
+      umo:
+        type: string
+        description: 'The unit of measure of SKU'
+      merchant_info:
+        $ref: '#/definitions/MerchantInfo'
+        description: 'The information of merchants'
+      logistics_info:
+        $ref: '#/definitions/LogisticsInfo'
+        description: 'The information of logistics used to shipping the SKUs'
+      warehouse:
+        $ref: '#/definitions/WarehouseInfo'
+        description: 'The information of warehouse that SKUs outbound'
+
+  StockLostResponse:
+    type: object
+
+  WarehouseInfo:
+    type: object
+    properties:
+      warehouse_name:
+        type: string
+        description: 'The Name of a specific warehouse'
+      country_code:
+        type: string
+        description: 'The code of the country in where the warehouse locates'
+      province:
+        type: string
+        description: 'The province in where the warehouse locates'
+      city:
+        type: string
+        description: 'The city in where the warehouse locates'
+      address:
+        type: string
+        description: 'The address in where the warehouse locates'
+
+  MerchantInfo:
+    type: object
+    properties:
+      merchant_id:
+        type: string
+        description: 'The unique no. to identify the erchant'
+      merchant_name:
+        type: string
+        description: 'The name of merchant'
+      email:
+        type: string
+        description: 'The Email address of merchant'
+      phone_number:
+        type: string
+        description: 'The phone no. of merchant'
+      distribution_channel:
+        type: string
+        description: 'The primary distribution channel of the merchant'
+
+  LogisticsInfo:
+    type: object
+    properties:
+      logistics_name:
+        type: string
+        description: 'The name of logistics'
+      tracking_number:
+        type: string
+        description: 'The tracking no. of the shipment'
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
