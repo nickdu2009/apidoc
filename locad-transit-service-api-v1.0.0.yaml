@@ -78,13 +78,13 @@ paths:
           description: Unknown Error
           schema:
             $ref: '#/definitions/Error'
-      operationId: Warehouse Stock Inbound
-      description: 'Through the API, partners send the inbound data to igloo'
+      operationId: Warehouse Stock Outbound
+      description: 'Through the API, partners send the outbound data to igloo'
       security:
         - ApiKeyAuth: [ ]
       tags:
         - transit
-      summary: Stock Inbound
+      summary: Stock Outbound
 
   /stock_lost:
     post:
@@ -111,13 +111,13 @@ paths:
           description: Unknown Error
           schema:
             $ref: '#/definitions/Error'
-      operationId: Warehouse Stock Inbound
-      description: 'Through the API, partners send the inbound data to igloo'
+      operationId: Warehouse Stock Lost
+      description: 'Through the API, partners send the lost data to igloo'
       security:
         - ApiKeyAuth: [ ]
       tags:
         - transit
-      summary: Stock Inbound
+      summary: Stock Lost
 
 securityDefinitions:
   ApiKeyAuth:
@@ -141,7 +141,7 @@ definitions:
       inbound_date_timestamp:
         type: integer
         format: int64
-        description: 'Inbound data/time of product (timestamp in seconds)'
+        description: 'Inbound data/time of product (unix timestamp in seconds)'
       product_name:
         type: string
         description: 'The name of product'
@@ -188,17 +188,20 @@ definitions:
 
   StockInboundResponse:
     type: object
-    $ref: '#/definitions/CommonSuccessRsp'
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
 
   StockOutboundRequest:
     type: object
     properties:
       sku_id:
         type: string
-        description: 'SKU ID of product'
-      item_id:
-        type: string
-        description: 'Item ID of product'
+        description: 'SKU ID of product in db'
       sn:
         type: string
         description: 'Series No. of product, if any'
@@ -208,11 +211,11 @@ definitions:
       inbound_date_timestamp:
         type: integer
         format: int64
-        description: 'Inbound data/time of product (timestamp in seconds)'
+        description: 'Inbound data/time of product (unix timestamp in seconds)'
       outbound_date_timestamp:
         type: integer
         format: int64
-        description: 'Outbound data/time of product (timestamp in seconds)'
+        description: 'Outbound data/time of product (unix timestamp in seconds)'
       product_name:
         type: string
         description: 'The name of product'
@@ -245,20 +248,33 @@ definitions:
       warehouse:
         $ref: '#/definitions/WarehouseInfo'
         description: 'The information of warehouse that SKUs outbound'
+    required:
+      - sku_id
+      - lot_no._tracking
+      - outbound_date_timestamp
+      - product_name
+      - product_category
+      - sku_status
+      - unit_price
+      - quantity
+      - umo
 
   StockOutboundResponse:
     type: object
-    $ref: '#/definitions/CommonSuccessRsp'
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
 
   StockLostRequest:
     type: object
     properties:
       sku_id:
         type: string
-        description: 'SKU ID of product'
-      item_id:
-        type: string
-        description: 'Item ID of product'
+        description: 'SKU ID of product in db'
       sn:
         type: string
         description: 'Series No. of product, if any'
@@ -268,15 +284,15 @@ definitions:
       inbound_date_timestamp:
         type: integer
         format: int64
-        description: 'Inbound data/time of product (timestamp in seconds)'
+        description: 'Inbound data/time of product (unix timestamp in seconds)'
       outbound_date_timestamp:
         type: integer
         format: int64
-        description: 'Outbound data/time of product (timestamp in seconds)'
+        description: 'Outbound data/time of product (unix timestamp in seconds)'
       lost_date_timestamp:
         type: integer
         format: int64
-        description: 'Lost data/time of product (timestamp in seconds)'
+        description: 'Lost data/time of product (unix timestamp in seconds)'
       product_name:
         type: string
         description: 'The name of product'
@@ -309,10 +325,26 @@ definitions:
       warehouse:
         $ref: '#/definitions/WarehouseInfo'
         description: 'The information of warehouse that SKUs outbound'
+    required:
+      - sku_id
+      - lot_no._tracking
+      - lost_date_timestamp
+      - product_name
+      - product_category
+      - sku_status
+      - unit_price
+      - quantity
+      - umo
 
   StockLostResponse:
     type: object
-    $ref: '#/definitions/CommonSuccessRsp'
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
 
   WarehouseInfo:
     type: object
@@ -376,16 +408,6 @@ definitions:
       - tracking_number
 
   Error:
-    type: object
-    properties:
-      code:
-        type: string
-        description: A short string with a brief explanation of the error
-      message:
-        type: string
-        description: Detailed description of the error
-
-  CommonSuccessRsp:
     type: object
     properties:
       code:
