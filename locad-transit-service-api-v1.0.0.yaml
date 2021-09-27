@@ -131,10 +131,7 @@ definitions:
     properties:
       sku_id:
         type: string
-        description: 'SKU ID of product'
-      item_id:
-        type: string
-        description: 'Item ID of product'
+        description: 'SKU ID of product in db'
       sn:
         type: string
         description: 'Series No. of product, if any'
@@ -161,6 +158,7 @@ definitions:
         type: number
         format: double
         description: 'The Unit Price of per SKU/Item'
+        example: 123456.789
       quantity:
         type: integer
         format: int64
@@ -177,9 +175,20 @@ definitions:
       warehouse:
         $ref: '#/definitions/WarehouseInfo'
         description: 'The information of warehouse that SKUs outbound'
+    required:
+      - sku_id
+      - lot_no._tracking
+      - inbound_date_timestamp
+      - product_name
+      - product_category
+      - sku_status
+      - unit_price
+      - quantity
+      - umo
 
   StockInboundResponse:
     type: object
+    $ref: '#/definitions/CommonSuccessRsp'
 
   StockOutboundRequest:
     type: object
@@ -239,6 +248,7 @@ definitions:
 
   StockOutboundResponse:
     type: object
+    $ref: '#/definitions/CommonSuccessRsp'
 
   StockLostRequest:
     type: object
@@ -302,6 +312,7 @@ definitions:
 
   StockLostResponse:
     type: object
+    $ref: '#/definitions/CommonSuccessRsp'
 
   WarehouseInfo:
     type: object
@@ -321,6 +332,12 @@ definitions:
       address:
         type: string
         description: 'The address in where the warehouse locates'
+    required:
+      - warehouse_name
+      - country_code
+      - province
+      - city
+      - address
 
   MerchantInfo:
     type: object
@@ -340,6 +357,10 @@ definitions:
       distribution_channel:
         type: string
         description: 'The primary distribution channel of the merchant'
+    required:
+      - merchant_id
+      - merchant_name
+      - email
 
   LogisticsInfo:
     type: object
@@ -350,8 +371,21 @@ definitions:
       tracking_number:
         type: string
         description: 'The tracking no. of the shipment'
+    required:
+      - logistics_name
+      - tracking_number
 
   Error:
+    type: object
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
+
+  CommonSuccessRsp:
     type: object
     properties:
       code:
