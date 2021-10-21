@@ -86,19 +86,19 @@ paths:
         - transit
       summary: Stock Outbound
 
-  /stock_lost:
+  /fill_claim:
     post:
       parameters:
         - in: body
-          name: StockInboundRequest
+          name: FillClaimRequest
           required: false
           schema:
-            $ref: '#/definitions/StockLostRequest'
+            $ref: '#/definitions/FillClaimRequest'
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/StockLostResponse'
+            $ref: '#/definitions/FillClaimResponse'
         '400':
           description: Bad Request
           schema:
@@ -159,22 +159,52 @@ definitions:
         format: double
         description: 'The Unit Price of per SKU/Item'
         example: 123456.789
-      quantity:
+      currency:
+        type: string
+        description: 'The currency of unit_price'
+      inbound_quantity:
         type: integer
         format: int64
         description: 'The inbound quantity of SKU'
       umo:
         type: string
         description: 'The unit of measure of SKU'
-      merchant_info:
-        $ref: '#/definitions/MerchantInfo'
-        description: 'The information of merchants'
-      logistics_info:
-        $ref: '#/definitions/LogisticsInfo'
-        description: 'The information of logistics used to shipping the SKUs'
-      warehouse:
-        $ref: '#/definitions/WarehouseInfo'
-        description: 'The information of warehouse that SKUs outbound'
+      merchant_id:
+        type: string
+        description: 'The unique no. to identify the erchant'
+      merchant_name:
+        type: string
+        description: 'The name of merchant'
+      email:
+        type: string
+        description: 'The Email address of merchant'
+      phone_number:
+        type: string
+        description: 'The phone no. of merchant'
+      distribution_channel:
+        type: string
+        description: 'The primary distribution channel of the merchant'
+      logistics_name:
+        type: string
+        description: 'The name of logistics'
+      tracking_number:
+        type: string
+        description: 'The tracking no. of the shipment'
+      warehouse_name:
+        type: string
+        description: 'The Name of a specific warehouse'
+      country_code:
+        type: string
+        description: 'The code of the country in where the warehouse locates'
+      province:
+        type: string
+        description: 'The province in where the warehouse locates'
+      city:
+        type: string
+        description: 'The city in where the warehouse locates'
+      address:
+        type: string
+        description: 'The address in where the warehouse locates'
     required:
       - sku_id
       - lot_no._tracking
@@ -184,8 +214,19 @@ definitions:
       - sku_condition
       - sku_status
       - unit_price
-      - quantity
+      - currency
+      - inbound_quantity
       - umo
+      - merchant_id
+      - merchant_name
+      - email
+      - logistics_name
+      - tracking_number
+      - warehouse_name
+      - country_code
+      - province
+      - city
+      - address
 
   StockInboundResponse:
     type: object
@@ -233,22 +274,52 @@ definitions:
         type: number
         format: double
         description: 'The Unit Price of per SKU/Item'
-      quantity:
+      currency:
+        type: string
+        description: 'The currency of unit_price'
+      outbound_quantity:
         type: integer
         format: int64
-        description: 'The inbound quantity of SKU'
+        description: 'The outbound quantity of SKU'
       umo:
         type: string
         description: 'The unit of measure of SKU'
-      merchant_info:
-        $ref: '#/definitions/MerchantInfo'
-        description: 'The information of merchants'
-      logistics_info:
-        $ref: '#/definitions/LogisticsInfo'
-        description: 'The information of logistics used to shipping the SKUs'
-      warehouse:
-        $ref: '#/definitions/WarehouseInfo'
-        description: 'The information of warehouse that SKUs outbound'
+      merchant_id:
+        type: string
+        description: 'The unique no. to identify the erchant'
+      merchant_name:
+        type: string
+        description: 'The name of merchant'
+      email:
+        type: string
+        description: 'The Email address of merchant'
+      phone_number:
+        type: string
+        description: 'The phone no. of merchant'
+      distribution_channel:
+        type: string
+        description: 'The primary distribution channel of the merchant'
+      logistics_name:
+        type: string
+        description: 'The name of logistics'
+      tracking_number:
+        type: string
+        description: 'The tracking no. of the shipment'
+      warehouse_name:
+        type: string
+        description: 'The Name of a specific warehouse'
+      country_code:
+        type: string
+        description: 'The code of the country in where the warehouse locates'
+      province:
+        type: string
+        description: 'The province in where the warehouse locates'
+      city:
+        type: string
+        description: 'The city in where the warehouse locates'
+      address:
+        type: string
+        description: 'The address in where the warehouse locates'
     required:
       - sku_id
       - lot_no._tracking
@@ -257,9 +328,20 @@ definitions:
       - product_name
       - product_category
       - sku_status
+      - currency
       - unit_price
-      - quantity
+      - outbound_quantity
       - umo
+      - merchant_id
+      - merchant_name
+      - email
+      - logistics_name
+      - tracking_number
+      - warehouse_name
+      - country_code
+      - province
+      - city
+      - address
 
   StockOutboundResponse:
     type: object
@@ -271,75 +353,48 @@ definitions:
         type: string
         description: Detailed description of the error
 
-  StockLostRequest:
+  FillClaimRequest:
     type: object
     properties:
       sku_id:
         type: string
         description: 'SKU ID of product in db'
-      sn:
-        type: string
-        description: 'Series No. of product, if any'
-      lot_no._tracking:
-        type: string
-        description: 'Lot No. Tracking of product'
-      inbound_date_timestamp:
+      claim_quantity:
         type: integer
         format: int64
-        description: 'Inbound data/time of product (unix timestamp in seconds)'
-      outbound_date_timestamp:
-        type: integer
-        format: int64
-        description: 'Outbound data/time of product (unix timestamp in seconds)'
-      lost_date_timestamp:
-        type: integer
-        format: int64
-        description: 'Lost data/time of product (unix timestamp in seconds)'
-      product_name:
+        description: 'The submit_claim quantity of SKU'
+      claim_type:
         type: string
-        description: 'The name of product'
-      product_category:
+        example: "Damage/Lost"
+        description: 'submit_claim type Damage or Lost'
+      claim_reason:
         type: string
-        description: 'The category of product'
-      sku_condition:
+        description: 'description of why you submit_claim'
+      incident_date:
         type: string
-        description: 'The description of product condition while inbound'
-      sku_status:
-        type: string
-        description: 'The status of SKU/Item'
-      unit_price:
-        type: number
-        format: double
-        description: 'The Unit Price of per SKU/Item'
-      quantity:
-        type: integer
-        format: int64
-        description: 'The inbound quantity of SKU'
-      umo:
-        type: string
-        description: 'The unit of measure of SKU'
-      merchant_info:
-        $ref: '#/definitions/MerchantInfo'
-        description: 'The information of merchants'
-      logistics_info:
-        $ref: '#/definitions/LogisticsInfo'
-        description: 'The information of logistics used to shipping the SKUs'
-      warehouse:
-        $ref: '#/definitions/WarehouseInfo'
-        description: 'The information of warehouse that SKUs outbound'
+        example: '2006-01-02T15:04:05Z07:00'
+      package_photos:
+        type: array
+        items:
+          type: string
+      police_document:
+        type: array
+        description: 'policy pdf file or photos, only lost needed'
+        items:
+          type: string
+      sku_photos:
+        type: array
+        description: 'photos of sku'
+        items:
+          type: string
     required:
       - sku_id
-      - lot_no._tracking
-      - lost_date_timestamp
-      - sku_condition
-      - product_name
-      - product_category
-      - sku_status
-      - unit_price
-      - quantity
-      - umo
+      - claim_quantity
+      - claim_type
+      - claim_reason
+      - incident_date
 
-  StockLostResponse:
+  FillClaimResponse:
     type: object
     properties:
       code:
