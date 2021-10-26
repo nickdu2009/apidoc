@@ -554,6 +554,22 @@
             "name": "policy_id",
             "in": "path",
             "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "FilterID",
+            "name": "filter_id",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "ClaimStates",
+            "description": "Approved/Rejected/Canceled/Pending Processing/Pending Proof",
+            "name": "claim_states",
+            "in": "query"
           }
         ],
         "responses": {
