@@ -488,7 +488,7 @@ definitions:
         $ref: '#/definitions/Sender'
       receiver:
         $ref: '#/definitions/Receiver'
-      sku:
+      skus:
         type: array
         items:
           type: object
