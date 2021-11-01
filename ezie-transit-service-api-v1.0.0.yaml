@@ -288,7 +288,7 @@ paths:
           schema:
             type: object
             properties:
-              order_cancelled_date:
+              transit_cancelled_date:
                 type: integer
                 format: int64
                 description: Unix timestamp(second) of Sender cancel order
@@ -330,7 +330,7 @@ paths:
           schema:
             type: object
             properties:
-              shipment_date:
+              transit_shipment_date:
                 type: integer
                 format: int64
                 description: Unix timestamp(second) of pacakge shipment date
@@ -414,7 +414,7 @@ paths:
           schema:
             type: object
             properties:
-              lost_date:
+              transit_lost_date:
                 type: integer
                 format: int64
                 description: Unix timestamp(second) the package lost
