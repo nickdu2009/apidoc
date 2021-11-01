@@ -388,7 +388,7 @@ paths:
       summary: Lost Transit
       tags:
         - transit
-      operationId: Deliver Transit
+      operationId: Lost Transit
       description: The partner calls the API to inform igloo that the package is lost
       security:
         - ApiKeyAuth: []
