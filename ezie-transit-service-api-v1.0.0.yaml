@@ -377,6 +377,66 @@ paths:
                 format: int64
                 description: Unix timestamp(second) the package was signed in
                 example: 1635748355
+  '/transits/{transit_id}/lost':
+    parameters:
+      - type: string
+        name: transit_id
+        in: path
+        required: true
+        description: 'The ID that uniquely identifies the parcel from the partner '
+    put:
+      summary: Lost Transit
+      tags:
+        - transit
+      operationId: Deliver Transit
+      description: The partner calls the API to inform igloo that the package is lost
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              policy:
+                $ref: '#/definitions/Policy'
+        '400':
+          $ref: '#/responses/errBadRequestResponse'
+        '403':
+          $ref: '#/responses/errForbiddenResponse'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              lost_date:
+                type: integer
+                format: int64
+                description: Unix timestamp(second) the package lost
+                example: 1635748355
+              skus:
+                type: array
+                description: Skus lost in the package
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID of SKU on partner platform
+                    quantity:
+                      type: string
+                      description: The number of missing SKUs in the package
+                  required:
+                    - id
+                    - quantity
+            required:
+              - skus
+          x-examples: {}
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
