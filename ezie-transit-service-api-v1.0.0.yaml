@@ -419,24 +419,38 @@ paths:
                 format: int64
                 description: Unix timestamp(second) the package lost
                 example: 1635748355
-              skus:
-                type: array
-                description: Skus lost in the package
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: ID of SKU on partner platform
-                    quantity:
-                      type: string
-                      description: The number of missing SKUs in the package
-                  required:
-                    - id
-                    - quantity
-            required:
-              - skus
           x-examples: {}
+  '/transits/{transit_id}/customer_portal_url':
+    parameters:
+      - type: string
+        name: transit_id
+        in: path
+        required: true
+        description: 'The ID that uniquely identifies the parcel from the partner '
+    get:
+      summary: Customer Portal URL For Claim
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                description: Use a browser or webview to open the URL and enter the igloo claim web portal to submit claim
+              expiry_date:
+                type: integer
+                description: The unix timestamp(second) of the expiry time of the url
+        '400':
+          $ref: '#/responses/errBadRequestResponse'
+        '403':
+          $ref: '#/responses/errForbiddenResponse'
+      operationId: Get Customer Portal URL by Transit ID
+      description: Get Customer Portal URL by Transit ID
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - transit
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
@@ -548,47 +562,13 @@ definitions:
         $ref: '#/definitions/Sender'
       receiver:
         $ref: '#/definitions/Receiver'
-      skus:
-        type: array
-        items:
-          type: object
-          properties:
-            id:
-              type: string
-              description: ID of SKU on partner platform
-            name:
-              type: string
-              description: Name of SKU on partner platform
-            item_id:
-              type: string
-              description: Item Id of SKU on partner platform
-            quantity:
-              type: integer
-              description: Number of SKUs in the package
-            category:
-              type: string
-              description: Category of SKU
-            price:
-              type: number
-              description: Price of single SKU
-              format: double
-            weight:
-              type: number
-              description: Weight of single SKU
-              format: double
-            images:
-              type: array
-              description: SKU image links
-              uniqueItems: true
-              items:
-                type: string
-                format: uri
-          required:
-            - id
-            - name
-            - item_id
-            - quantity
-            - price
+      shipment_value:
+        type: number
+        format: float
+        description: ' the value of the insurance of the order'
+      shipment_content:
+        type: string
+        description: the description that partner get from the shipper regarding the content of the package
     required:
       - transit_id
       - order_id
@@ -602,6 +582,8 @@ definitions:
       - ship_to
       - sender
       - receiver
+      - shipment_value
+      - shipment_content
   CreateTransitResponse:
     type: object
     properties:
