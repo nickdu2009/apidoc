@@ -89,7 +89,7 @@ paths:
       - type: string
         name: transit_id
         in: path
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
         required: true
   '/transits/{transit_id}/claims':
     get:
@@ -123,7 +123,7 @@ paths:
         name: transit_id
         in: path
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
   '/claims/{claim_id}':
     get:
       summary: Get Claim
@@ -212,7 +212,7 @@ paths:
         name: transit_id
         in: path
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
     put:
       summary: ''
       operationId: Notify Policy State Change
@@ -225,6 +225,23 @@ paths:
           name: body
           schema:
             $ref: '#/definitions/NotifyPolicy'
+          description: ''
+      tags:
+        - webhook
+  /webhook/transits:
+    parameters: []
+    post:
+      summary: ''
+      operationId: Notify Policy Create
+      responses:
+        '200':
+          description: OK
+      description: Notify Policy Create
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/NotifyPolicyCreate'
           description: ''
       tags:
         - webhook
@@ -251,13 +268,30 @@ paths:
             $ref: '#/definitions/NotifyClaim'
       tags:
         - webhook
+  /webhook/claims:
+    post:
+      summary: Notify Claim Create
+      operationId: Notify Claim Create
+      responses:
+        '200':
+          description: OK
+      description: Nofify Claim Create
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/NotifyClaimCreate'
+      tags:
+        - webhook
   '/transits/{transit_id}/cancel':
     parameters:
       - type: string
         name: transit_id
         in: path
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
     put:
       summary: Cancel Transit
       tags:
@@ -299,7 +333,7 @@ paths:
         name: transit_id
         in: path
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
     put:
       summary: Shipout Transit
       tags:
@@ -341,7 +375,7 @@ paths:
         name: transit_id
         in: path
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
     put:
       summary: Deliver Transit
       tags:
@@ -383,7 +417,7 @@ paths:
         name: transit_id
         in: path
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
     put:
       summary: Lost Transit
       tags:
@@ -426,7 +460,7 @@ paths:
         name: transit_id
         in: path
         required: true
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
     get:
       summary: Customer Portal URL For Claim
       responses:
@@ -513,6 +547,21 @@ definitions:
     properties:
       state:
         $ref: '#/definitions/PolicyState'
+      state_update_timestamp:
+        type: integer
+        format: int64
+        example: 1636529697
+        description: Unix Timestamp(second) of state update
+  NotifyPolicyCreate:
+    type: object
+    title: NotifyPolicyCreate
+    description: ''
+    properties:
+      created_timestamp:
+        type: integer
+        format: int64
+        example: 1636529697
+        description: Unix Timestamp(second) of create policy
   CreateTransitRequest:
     type: object
     description: ''
@@ -521,10 +570,10 @@ definitions:
     properties:
       transit_id:
         type: string
-        description: 'The ID that uniquely identifies the parcel from the partner '
-      order_id:
+        description: Partner's internal ID for the order
+      tpl_order_id:
         type: string
-        description: The order ID of the parcel
+        description: ‘The 3PL's internal ID of the order. Partner get's this from the 3PL upon order creation’
       order_created_date:
         type: integer
         description: 'unix timestamp(sec) of Order created time of parcel '
@@ -544,15 +593,11 @@ definitions:
         format: double
         description: The shipping fee of the package
         example: 50.11
-      premium:
-        type: number
-        format: double
-        description: Premium calculated by partner
       name_of_logistics_company:
         type: string
         description: Name of logistics company
       tracking_number_of_logistics_company:
-        description: Tracking number of logistics company
+        description: The tracking number from the 3PL. Ezie get's this from the 3PL open order creation. The end user will typically use this to track the shipment
         type: string
       ship_from:
         $ref: '#/definitions/Address'
@@ -569,9 +614,17 @@ definitions:
       shipment_content:
         type: string
         description: the description that partner get from the shipper regarding the content of the package
+      igloo_premium:
+        type: number
+        format: double
+        description: igloo's fee for insurance
+      ezie_premium:
+        type: number
+        format: double
+        description: ezie's fee for insurance
     required:
       - transit_id
-      - order_id
+      - tpl_order_id
       - order_created_date
       - order_paid_date
       - order_currency
@@ -584,6 +637,8 @@ definitions:
       - receiver
       - shipment_value
       - shipment_content
+      - igloo_premium
+      - ezie_premium
   CreateTransitResponse:
     type: object
     properties:
@@ -618,7 +673,30 @@ definitions:
         $ref: '#/definitions/ClaimState'
       transit_id:
         type: string
-        description: 'The ID that uniquely identifies the parcel from the partner '
+        description: Partner's internal ID for the order
+      state_update_timestamp:
+        type: integer
+        format: int64
+        example: 1636529818
+        description: Unix Timestamp(second) of state update
+  NotifyClaimCreate:
+    type: object
+    properties:
+      claim_id:
+        type: string
+        description: Claim ID of igloo
+      transit_id:
+        type: string
+        description: Partner's internal ID for the order
+      created_timestamp:
+        type: integer
+        format: int64
+        example: 1636529818
+        description: Unix Timestamp(second) of state update
+    required:
+      - claim_id
+      - transit_id
+      - created_timestamp
   GetClaimResponse:
     type: object
     properties:
