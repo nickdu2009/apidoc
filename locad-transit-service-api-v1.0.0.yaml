@@ -86,6 +86,39 @@ paths:
         - transit
       summary: Stock Outbound
 
+  /stock_found:
+    post:
+      parameters:
+        - in: body
+          name: StockFoundRequest
+          required: false
+          schema:
+            $ref: '#/definitions/StockFoundRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/StockFoundResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      operationId: Warehouse Stock Found
+      description: 'Through the API, partners send the outbound data to igloo'
+      security:
+        - ApiKeyAuth: [ ]
+      tags:
+        - transit
+      summary: Stock Found
+
   /fill_claim:
     post:
       parameters:
@@ -132,16 +165,16 @@ definitions:
       sku_id:
         type: string
         description: 'SKU ID of product in db'
-      sn:
+      series_no:
         type: string
         description: 'Series No. of product, if any'
-      lot_no._tracking:
+      lot_number_tracking:
         type: string
         description: 'Lot No. Tracking of product'
-      inbound_date_timestamp:
+      inbound_date:
         type: integer
         format: int64
-        description: 'Inbound data/time of product (unix timestamp in seconds)'
+        description: 'Inbound data/time of product format like 2006-01-02T15:04:05+07:00'
       product_name:
         type: string
         description: 'The name of product'
@@ -171,7 +204,7 @@ definitions:
         description: 'The unit of measure of SKU'
       merchant_id:
         type: string
-        description: 'The unique no. to identify the erchant'
+        description: 'The unique no. to identify the merchant'
       merchant_name:
         type: string
         description: 'The name of merchant'
@@ -207,8 +240,8 @@ definitions:
         description: 'The address in where the warehouse locates'
     required:
       - sku_id
-      - lot_no._tracking
-      - inbound_date_timestamp
+      - lot_number_tracking
+      - inbound_date
       - product_name
       - product_category
       - sku_condition
@@ -244,39 +277,22 @@ definitions:
       sku_id:
         type: string
         description: 'SKU ID of product in db'
-      sn:
+      series_no:
         type: string
         description: 'Series No. of product, if any'
-      lot_no._tracking:
+      lot_number_tracking:
         type: string
         description: 'Lot No. Tracking of product'
-      inbound_date_timestamp:
+      outbound_date:
         type: integer
         format: int64
-        description: 'Inbound data/time of product (unix timestamp in seconds)'
-      outbound_date_timestamp:
-        type: integer
-        format: int64
-        description: 'Outbound data/time of product (unix timestamp in seconds)'
-      product_name:
-        type: string
-        description: 'The name of product'
-      product_category:
-        type: string
-        description: 'The category of product'
+        description: 'Outbound data/time of product format like 2006-01-02T15:04:05+07:00'
       sku_condition:
         type: string
         description: 'The description of product condition while inbound'
       sku_status:
         type: string
         description: 'The status of SKU/Item'
-      unit_price:
-        type: number
-        format: double
-        description: 'The Unit Price of per SKU/Item'
-      currency:
-        type: string
-        description: 'The currency of unit_price'
       outbound_quantity:
         type: integer
         format: int64
@@ -284,21 +300,6 @@ definitions:
       umo:
         type: string
         description: 'The unit of measure of SKU'
-      merchant_id:
-        type: string
-        description: 'The unique no. to identify the erchant'
-      merchant_name:
-        type: string
-        description: 'The name of merchant'
-      email:
-        type: string
-        description: 'The Email address of merchant'
-      phone_number:
-        type: string
-        description: 'The phone no. of merchant'
-      distribution_channel:
-        type: string
-        description: 'The primary distribution channel of the merchant'
       logistics_name:
         type: string
         description: 'The name of logistics'
@@ -322,19 +323,12 @@ definitions:
         description: 'The address in where the warehouse locates'
     required:
       - sku_id
-      - lot_no._tracking
-      - outbound_date_timestamp
+      - lot_number_tracking
+      - outbound_date
       - sku_condition
-      - product_name
-      - product_category
       - sku_status
-      - currency
-      - unit_price
       - outbound_quantity
       - umo
-      - merchant_id
-      - merchant_name
-      - email
       - logistics_name
       - tracking_number
       - warehouse_name
@@ -353,12 +347,63 @@ definitions:
         type: string
         description: Detailed description of the error
 
+  StockFoundRequest:
+    type: object
+    properties:
+      sku_id:
+        type: string
+        description: 'SKU ID of product in db'
+      series_no:
+        type: string
+        description: 'Series No. of product, if any'
+      lot_number_tracking:
+        type: string
+        description: 'Lot No. Tracking of product'
+      found_date:
+        type: integer
+        format: int64
+        description: 'found data/time of product format like 2006-01-02T15:04:05+07:00'
+      sku_condition:
+        type: string
+        description: 'The description of product condition while inbound'
+      sku_status:
+        type: string
+        description: 'The status of SKU/Item'
+      found_quantity:
+        type: integer
+        format: int64
+        description: 'The found quantity of SKU'
+    required:
+      - sku_id
+      - lot_number_tracking
+      - found_date
+      - sku_condition
+      - sku_status
+      - found_quantity
+
+  StockFoundResponse:
+    type: object
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
+
+
   FillClaimRequest:
     type: object
     properties:
       sku_id:
         type: string
         description: 'SKU ID of product in db'
+      series_no:
+        type: string
+        description: 'Series No. of product, if any'
+      lot_number_tracking:
+        type: string
+        description: 'Lot No. Tracking of product'
       claim_quantity:
         type: integer
         format: int64
@@ -375,16 +420,17 @@ definitions:
         example: '2006-01-02T15:04:05Z07:00'
       package_photos:
         type: array
+        description: 'multi should split with ;'
         items:
           type: string
       police_document:
         type: array
-        description: 'policy pdf file or photos, only lost needed'
+        description: 'policy pdf file or photos, only lost needed, multi should split with ;'
         items:
           type: string
       sku_photos:
         type: array
-        description: 'photos of sku'
+        description: 'photos of sku, multi should split with ;'
         items:
           type: string
     required:
