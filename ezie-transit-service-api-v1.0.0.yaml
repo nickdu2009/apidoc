@@ -72,14 +72,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/GetTransitResponse'
-          examples:
-            example-1:
-              policy:
-                state: Issued
-                claim_period_end_timestamp: 0
-                purchased_timestamp: 0
-                policy_start_date: 0
-                policy_end_date: 0
+          examples: {}
         '400':
           $ref: '#/responses/errBadRequestResponse'
         '403':
@@ -301,16 +294,14 @@ paths:
             properties:
               policy:
                 $ref: '#/definitions/Policy'
-          examples:
-            example-1:
-              value:
-                policy:
-                  state: Cancelled
-                  claim_period_end_timestamp: 0
-                  purchased_timestamp: 0
-                  policy_start_timestamp: 0
-                  policy_end_timestamp: 0
-                  premium: 0
+            example:
+              policy:
+                state: Cancelled
+                claim_period_end_timestamp: 0
+                purchased_timestamp: 0
+                policy_start_timestamp: 0
+                policy_end_timestamp: 0
+                premium: 0
         '400':
           $ref: '#/responses/errBadRequestResponse'
         '403':
@@ -353,16 +344,14 @@ paths:
             properties:
               policy:
                 $ref: '#/definitions/Policy'
-          examples:
-            example-1:
-              value:
-                policy:
-                  state: Activated
-                  claim_period_end_timestamp: 0
-                  purchased_timestamp: 0
-                  policy_start_timestamp: 0
-                  policy_end_timestamp: 0
-                  premium: 0
+            example:
+              policy:
+                state: Activated
+                claim_period_end_timestamp: 0
+                purchased_timestamp: 0
+                policy_start_timestamp: 0
+                policy_end_timestamp: 0
+                premium: 0
         '400':
           $ref: '#/responses/errBadRequestResponse'
         '403':
@@ -409,16 +398,14 @@ paths:
             properties:
               policy:
                 $ref: '#/definitions/Policy'
-          examples:
-            example-1:
-              value:
-                policy:
-                  state: Activated
-                  claim_period_end_timestamp: 0
-                  purchased_timestamp: 0
-                  policy_start_timestamp: 0
-                  policy_end_timestamp: 0
-                  premium: 0
+            example:
+              policy:
+                state: Activated
+                claim_period_end_timestamp: 0
+                purchased_timestamp: 0
+                policy_start_timestamp: 0
+                policy_end_timestamp: 0
+                premium: 0
         '400':
           $ref: '#/responses/errBadRequestResponse'
         '403':
@@ -461,16 +448,14 @@ paths:
             properties:
               policy:
                 $ref: '#/definitions/Policy'
-          examples:
-            example-1:
-              value:
-                policy:
-                  state: Activated
-                  claim_period_end_timestamp: 0
-                  purchased_timestamp: 0
-                  policy_start_timestamp: 0
-                  policy_end_timestamp: 0
-                  premium: 0
+            example:
+              policy:
+                state: Activated
+                claim_period_end_timestamp: 0
+                purchased_timestamp: 0
+                policy_start_timestamp: 0
+                policy_end_timestamp: 0
+                premium: 0
         '400':
           $ref: '#/responses/errBadRequestResponse'
         '403':
