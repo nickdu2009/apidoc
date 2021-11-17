@@ -18,6 +18,81 @@
   "host": "localhost",
   "basePath": "/",
   "paths": {
+    "/v1/admin/activity_log": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "ActivityLog",
+        "parameters": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "x-go-name": "Action",
+            "name": "action",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "QueryKey",
+            "name": "query_key",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "QueryValue",
+            "name": "query_value",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Page",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "PageSize",
+            "name": "page_size",
+            "in": "query"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "x-go-name": "Time",
+            "name": "time",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "SortFilterName",
+            "name": "sort_filter_name",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "SortType",
+            "name": "sort_type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/ActivityLogRes"
+            }
+          }
+        }
+      }
+    },
     "/v1/admin/claims": {
       "get": {
         "tags": [
@@ -68,7 +143,8 @@
           },
           {
             "enum": [
-              "claim_request_at",
+              "requested_at",
+              "amount",
               "''"
             ],
             "type": "string",
@@ -385,8 +461,7 @@
           },
           {
             "enum": [
-              "policy_start_date",
-              "policy_issued_date",
+              "start_date",
               "coverage_amount",
               "premium_amount",
               "''"
@@ -582,6 +657,30 @@
         }
       }
     },
+    "/v1/admin/proxy/*": {
+      "get": {
+        "operationId": "GetProxy",
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/GetProxyRes"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "PostProxy",
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/PostProxyRes"
+            }
+          }
+        }
+      }
+    },
     "/v1/admin/reimbursements": {
       "get": {
         "tags": [
@@ -631,7 +730,10 @@
           },
           {
             "enum": [
-              "claim_approved_date",
+              "claim_approved_at",
+              "claim_approved_amount",
+              "reimburse_amount",
+              "reimburse_date",
               "''"
             ],
             "type": "string",
@@ -866,6 +968,31 @@
         }
       }
     },
+    "/v1/internal/debug": {
+      "put": {
+        "tags": [
+          "Internal"
+        ],
+        "operationId": "Debug",
+        "parameters": [
+          {
+            "name": "DebugReq",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/DebugReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/DebugRes"
+            }
+          }
+        }
+      }
+    },
     "/v1/internal/delay/expire-policy": {
       "post": {
         "tags": [
@@ -990,9 +1117,154 @@
           }
         }
       }
+    },
+    "/v1/partner/claim/fill_claim": {
+      "post": {
+        "tags": [
+          "partner"
+        ],
+        "operationId": "PartnerFillClaim",
+        "parameters": [
+          {
+            "name": "PartnerFillClaimReq",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PartnerFillClaimReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/PartnerFillClaimRes"
+            }
+          }
+        }
+      }
+    },
+    "/v1/partner/policy/found_sku": {
+      "post": {
+        "tags": [
+          "partner"
+        ],
+        "operationId": "PartnerFoundSku",
+        "parameters": [
+          {
+            "name": "PartnerFoundSkuReq",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PartnerFoundSkuReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/PartnerFoundSkuRes"
+            }
+          }
+        }
+      }
+    },
+    "/v1/partner/policy/issue_sku": {
+      "post": {
+        "tags": [
+          "partner"
+        ],
+        "operationId": "PartnerIssueSku",
+        "parameters": [
+          {
+            "name": "PartnerIssueSkuReq",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PartnerIssueSkuReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/PartnerIssueSkuRes"
+            }
+          }
+        }
+      }
+    },
+    "/v1/partner/policy/outbound_sku": {
+      "post": {
+        "tags": [
+          "partner"
+        ],
+        "operationId": "PartnerOutboundSku",
+        "parameters": [
+          {
+            "name": "PartnerOutboundSkuReq",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/PartnerOutboundSkuReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/PartnerOutboundSkuRes"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "ActivityLogItem": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "x-go-name": "Action"
+        },
+        "object": {
+          "type": "string",
+          "x-go-name": "Object"
+        },
+        "object_id": {
+          "type": "string",
+          "x-go-name": "ObjectID"
+        },
+        "opt_time": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "OptTime"
+        },
+        "user": {
+          "type": "string",
+          "x-go-name": "User"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "ActivityLogRes": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActivityLogItem"
+          },
+          "x-go-name": "List"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Total"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
     "AdminClaimApproveReq": {
       "type": "object",
       "required": [
@@ -1198,6 +1470,11 @@
           "type": "string",
           "x-go-name": "ClaimID"
         },
+        "claim_quantity": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ClaimQuantity"
+        },
         "claim_reason": {
           "type": "string",
           "x-go-name": "ClaimReason"
@@ -1257,12 +1534,24 @@
           "type": "string",
           "x-go-name": "RejectReason"
         },
+        "reject_reason_key": {
+          "type": "string",
+          "x-go-name": "RejectReasonKey"
+        },
+        "sku_condition": {
+          "type": "string",
+          "x-go-name": "SkuCondition"
+        },
         "sku_photos": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "x-go-name": "SkuPhotos"
+        },
+        "sku_status": {
+          "type": "string",
+          "x-go-name": "SkuStatus"
         },
         "total_approve_amount": {
           "type": "number",
@@ -1327,6 +1616,12 @@
           "type": "number",
           "format": "double",
           "x-go-name": "ApprovedAmount"
+        },
+        "claim_date": {
+          "description": "Claim date",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ClaimDate"
         },
         "id": {
           "description": "Claim ID",
@@ -1396,7 +1691,7 @@
             "Approved",
             "Rejected",
             "Canceled",
-            "Requested",
+            "Pending Processing",
             "Pending Proof"
           ],
           "x-go-name": "ClaimState"
@@ -1568,15 +1863,6 @@
     "ClaimSku": {
       "type": "object",
       "properties": {
-        "claim_amount": {
-          "type": "number",
-          "format": "double",
-          "x-go-name": "ClaimAmount"
-        },
-        "claim_reason": {
-          "type": "string",
-          "x-go-name": "ClaimReason"
-        },
         "lot_number": {
           "type": "string",
           "x-go-name": "LotNumber"
@@ -1594,17 +1880,9 @@
           "type": "string",
           "x-go-name": "SeriesNumber"
         },
-        "sku_condition": {
-          "type": "string",
-          "x-go-name": "SkuCondition"
-        },
         "sku_id": {
           "type": "string",
           "x-go-name": "SkuID"
-        },
-        "state": {
-          "type": "string",
-          "x-go-name": "State"
         },
         "total_item_value": {
           "type": "number",
@@ -1717,6 +1995,24 @@
       },
       "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
     },
+    "DebugReq": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "x-go-name": "Action"
+        },
+        "payload": {
+          "type": "string",
+          "x-go-name": "Payload"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "DebugRes": {
+      "type": "object",
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
     "DownloadClaimsRes": {
       "type": "object",
       "properties": {
@@ -1752,8 +2048,7 @@
       "type": "object",
       "properties": {
         "claim_quantity": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "x-go-name": "ClaimQuantity"
         },
         "claim_reason": {
@@ -1768,6 +2063,10 @@
           "type": "string",
           "x-go-name": "IncidentDate"
         },
+        "lot_number_tracking": {
+          "type": "string",
+          "x-go-name": "LotNumberTracking"
+        },
         "package_photos": {
           "type": "string",
           "x-go-name": "PackagePhotos"
@@ -1776,9 +2075,21 @@
           "type": "string",
           "x-go-name": "PoliceDocument"
         },
+        "series_no": {
+          "type": "string",
+          "x-go-name": "SeriesNo"
+        },
+        "sku_condition": {
+          "type": "string",
+          "x-go-name": "SkuCondition"
+        },
         "sku_id": {
           "type": "string",
           "x-go-name": "SkuID"
+        },
+        "sku_status": {
+          "type": "string",
+          "x-go-name": "SkuStatus"
         },
         "skus_photos": {
           "type": "string",
@@ -1817,9 +2128,12 @@
     "FoundSkuReq": {
       "type": "object",
       "properties": {
+        "found_date": {
+          "type": "string",
+          "x-go-name": "FoundDate"
+        },
         "found_quantity": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "x-go-name": "FoundQuantity"
         },
         "lot_number_tracking": {
@@ -1920,6 +2234,10 @@
       },
       "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
     },
+    "GetProxyRes": {
+      "type": "object",
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
     "InboundInfo": {
       "type": "object",
       "properties": {
@@ -1983,8 +2301,7 @@
           "x-go-name": "InboundDate"
         },
         "inbound_quantity": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "x-go-name": "InboundQuantity"
         },
         "logistics_name": {
@@ -2044,8 +2361,7 @@
           "x-go-name": "Umo"
         },
         "unit_price": {
-          "type": "number",
-          "format": "double",
+          "type": "string",
           "x-go-name": "UnitPrice"
         },
         "warehouse_name": {
@@ -2150,10 +2466,6 @@
           "type": "string",
           "x-go-name": "CountryCode"
         },
-        "currency": {
-          "type": "string",
-          "x-go-name": "Currency"
-        },
         "logistics_name": {
           "type": "string",
           "x-go-name": "LogisticsName"
@@ -2167,9 +2479,251 @@
           "x-go-name": "OutboundDate"
         },
         "outbound_quantity": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "x-go-name": "OutboundQuantity"
+        },
+        "province": {
+          "type": "string",
+          "x-go-name": "Province"
+        },
+        "series_no": {
+          "type": "string",
+          "x-go-name": "SeriesNo"
+        },
+        "sku_condition": {
+          "type": "string",
+          "x-go-name": "SkuCondition"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        },
+        "sku_status": {
+          "type": "string",
+          "x-go-name": "SkuStatus"
+        },
+        "tracking_number": {
+          "type": "string",
+          "x-go-name": "TrackingNumber"
+        },
+        "umo": {
+          "type": "string",
+          "x-go-name": "Umo"
+        },
+        "warehouse_name": {
+          "type": "string",
+          "x-go-name": "WarehouseName"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "OutboundSkuRes": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PartnerFillClaimReq": {
+      "type": "object",
+      "properties": {
+        "claim_quantity": {
+          "type": "string",
+          "x-go-name": "ClaimQuantity"
+        },
+        "claim_reason": {
+          "type": "string",
+          "x-go-name": "ClaimReason"
+        },
+        "claim_type": {
+          "type": "string",
+          "x-go-name": "ClaimType"
+        },
+        "incident_date": {
+          "type": "string",
+          "x-go-name": "IncidentDate"
+        },
+        "lot_number_tracking": {
+          "type": "string",
+          "x-go-name": "LotNumberTracking"
+        },
+        "package_photos": {
+          "type": "string",
+          "x-go-name": "PackagePhotos"
+        },
+        "police_document": {
+          "type": "string",
+          "x-go-name": "PoliceDocument"
+        },
+        "series_no": {
+          "type": "string",
+          "x-go-name": "SeriesNo"
+        },
+        "sku_condition": {
+          "type": "string",
+          "x-go-name": "SkuCondition"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        },
+        "sku_status": {
+          "type": "string",
+          "x-go-name": "SkuStatus"
+        },
+        "skus_photos": {
+          "type": "string",
+          "x-go-name": "SkusPhotos"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PartnerFillClaimRes": {
+      "type": "object",
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "x-go-name": "ClaimID"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "policy_id": {
+          "type": "string",
+          "x-go-name": "PolicyID"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PartnerFoundSkuReq": {
+      "type": "object",
+      "properties": {
+        "found_date": {
+          "type": "string",
+          "x-go-name": "FoundDate"
+        },
+        "found_quantity": {
+          "type": "string",
+          "x-go-name": "FoundQuantity"
+        },
+        "lot_number_tracking": {
+          "type": "string",
+          "x-go-name": "LotNumberTracking"
+        },
+        "series_no": {
+          "type": "string",
+          "x-go-name": "SeriesNo"
+        },
+        "sku_condition": {
+          "type": "string",
+          "x-go-name": "SkuCondition"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        },
+        "sku_status": {
+          "type": "string",
+          "x-go-name": "SkuStatus"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PartnerFoundSkuRes": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PartnerIssueSkuReq": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "city": {
+          "type": "string",
+          "x-go-name": "City"
+        },
+        "country_code": {
+          "type": "string",
+          "x-go-name": "CountryCode"
+        },
+        "currency": {
+          "type": "string",
+          "x-go-name": "Currency"
+        },
+        "distribution_channel": {
+          "type": "string",
+          "x-go-name": "DistributionChannel"
+        },
+        "email": {
+          "type": "string",
+          "x-go-name": "Email"
+        },
+        "inbound_date": {
+          "type": "string",
+          "x-go-name": "InboundDate"
+        },
+        "inbound_quantity": {
+          "type": "string",
+          "x-go-name": "InboundQuantity"
+        },
+        "logistics_name": {
+          "type": "string",
+          "x-go-name": "LogisticsName"
+        },
+        "lot_number_tracking": {
+          "type": "string",
+          "x-go-name": "LotNumberTracking"
+        },
+        "merchant_id": {
+          "type": "string",
+          "x-go-name": "MerchantID"
+        },
+        "merchant_name": {
+          "type": "string",
+          "x-go-name": "MerchantName"
+        },
+        "phone_number": {
+          "type": "string",
+          "x-go-name": "PhoneNumber"
         },
         "product_category": {
           "type": "string",
@@ -2208,8 +2762,7 @@
           "x-go-name": "Umo"
         },
         "unit_price": {
-          "type": "number",
-          "format": "double",
+          "type": "string",
           "x-go-name": "UnitPrice"
         },
         "warehouse_name": {
@@ -2219,7 +2772,96 @@
       },
       "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
     },
-    "OutboundSkuRes": {
+    "PartnerIssueSkuRes": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "policy_id": {
+          "type": "string",
+          "x-go-name": "PolicyID"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PartnerOutboundSkuReq": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "city": {
+          "type": "string",
+          "x-go-name": "City"
+        },
+        "country_code": {
+          "type": "string",
+          "x-go-name": "CountryCode"
+        },
+        "logistics_name": {
+          "type": "string",
+          "x-go-name": "LogisticsName"
+        },
+        "lot_number_tracking": {
+          "type": "string",
+          "x-go-name": "LotNumberTracking"
+        },
+        "outbound_date": {
+          "type": "string",
+          "x-go-name": "OutboundDate"
+        },
+        "outbound_quantity": {
+          "type": "string",
+          "x-go-name": "OutboundQuantity"
+        },
+        "province": {
+          "type": "string",
+          "x-go-name": "Province"
+        },
+        "series_no": {
+          "type": "string",
+          "x-go-name": "SeriesNo"
+        },
+        "sku_condition": {
+          "type": "string",
+          "x-go-name": "SkuCondition"
+        },
+        "sku_id": {
+          "type": "string",
+          "x-go-name": "SkuID"
+        },
+        "sku_status": {
+          "type": "string",
+          "x-go-name": "SkuStatus"
+        },
+        "tracking_number": {
+          "type": "string",
+          "x-go-name": "TrackingNumber"
+        },
+        "umo": {
+          "type": "string",
+          "x-go-name": "Umo"
+        },
+        "warehouse_name": {
+          "type": "string",
+          "x-go-name": "WarehouseName"
+        }
+      },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PartnerOutboundSkuRes": {
       "type": "object",
       "properties": {
         "code": {
@@ -2326,15 +2968,6 @@
     "PolicySku": {
       "type": "object",
       "properties": {
-        "claim_amount": {
-          "type": "number",
-          "format": "double",
-          "x-go-name": "ClaimAmount"
-        },
-        "claim_reason": {
-          "type": "string",
-          "x-go-name": "ClaimReason"
-        },
         "lot_number": {
           "type": "string",
           "x-go-name": "LotNumber"
@@ -2352,17 +2985,9 @@
           "type": "string",
           "x-go-name": "SeriesNumber"
         },
-        "sku_condition": {
-          "type": "string",
-          "x-go-name": "SkuCondition"
-        },
         "sku_id": {
           "type": "string",
           "x-go-name": "SkuID"
-        },
-        "state": {
-          "type": "string",
-          "x-go-name": "State"
         },
         "total_item_value": {
           "type": "number",
@@ -2384,6 +3009,10 @@
           "x-go-name": "UnitPrice"
         }
       },
+      "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
+    },
+    "PostProxyRes": {
+      "type": "object",
       "x-go-package": "gitlab.com/axinan/backend/transit/locad/pkg/dto"
     },
     "Proof": {
@@ -2483,6 +3112,10 @@
         "claim_type": {
           "type": "string",
           "x-go-name": "ClaimType"
+        },
+        "id": {
+          "type": "string",
+          "x-go-name": "ID"
         },
         "policy_id": {
           "type": "string",
