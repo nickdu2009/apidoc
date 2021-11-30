@@ -539,6 +539,9 @@ definitions:
         type: string
         example: '05225'
         description: 'The  postal code, also known as zip, postcode, Eircode, etc.'
+    required:
+      - city
+      - country_code
   Policy:
     type: object
     properties:
