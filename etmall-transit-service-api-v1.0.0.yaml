@@ -63,33 +63,42 @@ definitions:
   Item:
     type: object
     properties:
-      item_id:
+      id:
         type: string
         description: 'id of item'
-      item_name:
+      name:
         type: string
         description: 'name of item'
-      item_quantity:
+      quantity:
         type: string
         description: 'quantity of item'
-      item_unit_price:
+      unit_price:
         type: number
         description: 'unit_price of item'
-      item_icon_pictures:
+      icon_pictures:
         type: array
-        description: 'icon_pictures of item'
+        description: 'icon_pictures of item, at least one pic'
         items:
           type: string
           example: 'https://a.cdnsbn.com/images/products/martb/100227025694576.jpg'
-      item_description:
+      description:
         type: string
         description: 'description of item'
-      item_link_to_strawberrynet:
+      link_to_strawberrynet:
         type: string
         description: 'link_to_strawberrynet of item'
-      item_category:
+      category:
         type: string
         description: 'category of item'
+    required:
+      - id
+      - name
+      - quantity
+      - unit_price
+      - icon_pictures
+      - description
+      - link_to_strawberrynet
+      - category
 
   IssueOrderRequest:
     type: object
@@ -122,12 +131,11 @@ definitions:
       buyer_email_address:
         type: string
         description: 'email_address of customer'
-      item_list:
+      items:
         type: array
-        description: 'items of order'
+        description: 'items of order, at least one item'
         items:
           $ref: '#/definitions/Item'
-
     required:
       - order_id
       - order_name
@@ -136,7 +144,7 @@ definitions:
       - shipping_to
       - buyer_id
       - buyer_email_address
-      - item_list
+      - items
 
   IssueOrderResponse:
     type: object
