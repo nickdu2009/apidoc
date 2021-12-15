@@ -1,0 +1,164 @@
+swagger: '2.0'
+info:
+  description: |-
+    This api doc contains 2 partsItem
+    1. Api  is implemented by igloo
+    2. WbHook Api is implemented by etmall(The authentication method is defined by the partner)
+  version: 1.0.0
+  title: etmall Transit Service Api
+  license:
+    name: N/A
+  contact:
+    name: nick.du
+    email: nick.du@iglooinsure.com
+host: api.staging.iglooinsure.com
+basePath: /v1/transit-etmall/partner
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  '/policy/issue_order':
+    post:
+      parameters:
+        - in: body
+          name: IssueOrderRequest
+          required: false
+          schema:
+            $ref: '#/definitions/IssueOrderRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/IssueOrderResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unknown Error
+          schema:
+            $ref: '#/definitions/Error'
+      operationId: Issue Order
+      description: 'Through the API, partners send the Order data to igloo'
+      security:
+        - ApiKeyAuth: [ ]
+      tags:
+        - transit
+      summary: Issue Order
+
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: X-Axinan-Key
+    in: header
+
+definitions:
+  Item:
+    type: object
+    properties:
+      item_id:
+        type: string
+        description: 'id of item'
+      item_name:
+        type: string
+        description: 'name of item'
+      item_quantity:
+        type: string
+        description: 'quantity of item'
+      item_unit_price:
+        type: number
+        description: 'unit_price of item'
+      item_icon_pictures:
+        type: array
+        description: 'icon_pictures of item'
+        items:
+          type: string
+          example: 'https://a.cdnsbn.com/images/products/martb/100227025694576.jpg'
+      item_description:
+        type: string
+        description: 'description of item'
+      item_link_to_strawberrynet:
+        type: string
+        description: 'link_to_strawberrynet of item'
+      item_category:
+        type: string
+        description: 'category of item'
+
+  IssueOrderRequest:
+    type: object
+    properties:
+      order_id:
+        type: string
+        description: 'id of order'
+      order_name:
+        type: string
+        description: 'name of order'
+      order_purchase_time:
+        type: integer
+        format: int64
+        description: 'order_purchase_time in ms unix timestamp (like 1639555965995)'
+      order_currency_type:
+        type: string
+        description: 'currency_type of order'
+      seller_id:
+        type: string
+        description: 'id of seller'
+      seller_name:
+        type: string
+        description: 'name of seller'
+      shipping_to:
+        type: string
+        description: 'address of this order is shipping_to'
+      buyer_id:
+        type: string
+        description: 'id of customer'
+      buyer_email_address:
+        type: string
+        description: 'email_address of customer'
+      item_list:
+        type: array
+        description: 'items of order'
+        items:
+          $ref: '#/definitions/Item'
+
+    required:
+      - order_id
+      - order_name
+      - order_purchase_time
+      - order_currency_type
+      - shipping_to
+      - buyer_id
+      - buyer_email_address
+      - item_list
+
+  IssueOrderResponse:
+    type: object
+    properties:
+      order_id:
+        type: string
+      policy_id:
+        type: string
+        description: policy_id of this order in igloo system
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+        description: A short string with a brief explanation of the error
+      message:
+        type: string
+        description: Detailed description of the error
