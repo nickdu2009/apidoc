@@ -70,7 +70,8 @@ definitions:
         type: string
         description: 'name of item'
       quantity:
-        type: string
+        type: integer
+        format: int64
         description: 'quantity of item'
       unit_price:
         type: number
@@ -141,6 +142,8 @@ definitions:
       - order_name
       - order_purchase_time
       - order_currency_type
+      - seller_id
+      - seller_name
       - shipping_to
       - buyer_id
       - buyer_email_address
