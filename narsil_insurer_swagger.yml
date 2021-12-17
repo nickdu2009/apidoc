@@ -1,0 +1,106 @@
+---
+swagger: "2.0"
+info:
+  description: "本地退退货订单同步API"
+  version: "1.0.0"
+  title: "Insurer-Axinan Integration"
+servers:
+
+host: "api.ali-za.staging.axinan.com"
+basePath: "/v1"
+security:
+  - apiKey: [ ]
+schemes:
+  - "https"
+tags:
+  - name: "Orders"
+paths:
+  /v1/claims/approve_by_insurer:
+    put:
+      tags:
+        - "Claims"
+      summary: "保险公司批准理赔"
+      operationId: "Approve_by_insurer"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            type: "object"
+            required:
+              - "claimNo"
+            properties:
+              claimNo:
+                type: "string"
+                description: "理赔单号"
+                example: "202110131100300301390731320005"
+      responses:
+        "200":
+          schema:
+            type: "object"
+            properties:
+              code:
+                format: "int32"
+                type: "integer"
+                example: 200
+              message:
+                type: "string"
+                example: "OK"
+          description: "理赔批准成功"
+        "400":
+          schema:
+            type: object
+            properties:
+              code:
+                format: "int32"
+                type: "integer"
+              message:
+                type: "string"
+            example:
+              code: 400
+              message: "claim number is empty"
+          description: "请求参数有错误"
+        "404":
+          schema:
+            type: object
+            properties:
+              code:
+                format: "int32"
+                type: "integer"
+              message:
+                type: "string"
+            example:
+              code: 404
+              message: "Claim does not exist."
+          description: "理赔不存在"
+        "500":
+          schema:
+            type: object
+            properties:
+              code:
+                format: "int32"
+                type: "integer"
+              message:
+                type: "string"
+            example:
+              code: 500
+              message: "get claim err: ..."
+          description: "服务器内部错误"
+securityDefinitions:
+  apiKey:
+    type: "apiKey"
+    name: "X-Axinan-Key"
+    in: "header"
+definitions:
+  ErrorResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
