@@ -1,7 +1,7 @@
 ---
 swagger: "2.0"
 info:
-  description: "本地退退货订单同步API"
+  description: "保险公司批准理赔API"
   version: "1.0.0"
   title: "Insurer-Axinan Integration"
 host: "api.ali-za.staging.axinan.com"
