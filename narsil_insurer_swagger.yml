@@ -4,16 +4,12 @@ info:
   description: "本地退退货订单同步API"
   version: "1.0.0"
   title: "Insurer-Axinan Integration"
-servers:
-
 host: "api.ali-za.staging.axinan.com"
 basePath: "/v1"
 security:
   - apiKey: [ ]
 schemes:
   - "https"
-tags:
-  - name: "Orders"
 paths:
   /v1/claims/approve_by_insurer:
     put:
