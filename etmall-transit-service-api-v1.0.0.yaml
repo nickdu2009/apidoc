@@ -132,6 +132,13 @@ definitions:
       buyer_email_address:
         type: string
         description: 'email_address of customer'
+      parcel_tracking_number:
+        type: string
+        description: 'tracking_number of parcel'
+      shipping_start_time:
+        type: integer
+        format: int64
+        description: 'shipping_start_time in ms unix timestamp (like 1639555965995)'
       items:
         type: array
         description: 'items of order, at least one item'
