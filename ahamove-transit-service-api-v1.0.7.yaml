@@ -316,7 +316,7 @@ paths:
         - ApiKeyAuth: []
       tags:
         - transit
-  '/transits/multi_cancel':
+  /transits/multi_cancel:
     put:
       summary: Cancel Multi Policies Of An Order
       tags:
@@ -324,7 +324,7 @@ paths:
       operationId: Cancel Multi Policies Of An Order
       description: Cancel Multi Policies Of An Order
       security:
-        - ApiKeyAuth: [ ]
+        - ApiKeyAuth: []
       parameters:
         - in: body
           name: order_id
@@ -342,7 +342,7 @@ paths:
                 description: 'true: success; false: fail'
               reason:
                 type: string
-                description: 'fail_reason if cancel failed'
+                description: fail_reason if cancel failed
               policy:
                 $ref: '#/definitions/Policy'
         '400':
@@ -389,10 +389,15 @@ definitions:
             description: total price of item
         required:
           - total_price
+      item_value:
+        type: number
+        format: float
+        description: |-
+          for prepaid value
+          order of Key Account, If customer is a key account, this field must be set
     required:
       - transit_id
       - tracking_number
-
   Address:
     type: object
     x-examples:
@@ -447,8 +452,7 @@ definitions:
         description: unix timestamp(sec) of The end date of the policy corresponding to the parcel
       url:
         type: string
-        description: 'Use a browser or webview to open the URL and enter the igloo claim web portal to submit claim'
-
+        description: Use a browser or webview to open the URL and enter the igloo claim web portal to submit claim
   NotifyPolicy:
     type: object
     properties:
@@ -504,7 +508,7 @@ definitions:
         description: The order ID
       order_created_date:
         type: integer
-        description: 'unix timestamp(sec) of Order created time'
+        description: unix timestamp(sec) of Order created time
         format: int64
       order_paid_date:
         type: integer
@@ -524,6 +528,36 @@ definitions:
         description: Detail info for parcels
         items:
           $ref: '#/definitions/CreateTransitObj'
+      source_partner:
+        type: string
+        enum:
+          - ka
+        description: 'When the user is a key account, please set the value of this field to ka, otherwise please do not set the value of this field'
+      categories:
+        type: array
+        uniqueItems: true
+        description: 'Categories of all goods in the order，If the value of is_non_cod is equal to true, this field must be set'
+        items:
+          type: string
+          enum:
+            - electronics
+            - health & beauty
+            - housing & lifestyle
+            - cake
+            - cigarette
+            - drink
+            - fashion
+            - food
+            - grocery
+            - individual needs
+            - mother & baby
+            - transportation
+            - restaurant
+            - sport
+            - other
+      is_non_cod:
+        type: boolean
+        description: 'If the order is non-cod, please set the field to true, otherwise please set it to false'
     required:
       - order_id
       - order_created_date
