@@ -389,6 +389,10 @@ definitions:
             description: total price of item
         required:
           - total_price
+      categories:
+        type: array
+        uniqueItems: true
+        description: 'Categories of all goods in the transit，If the value of is_non_cod is equal to true, this field must be set'
       item_value:
         type: number
         format: float
@@ -533,10 +537,6 @@ definitions:
         enum:
           - ka
         description: 'When the user is a key account, please set the value of this field to ka, otherwise please do not set the value of this field'
-      categories:
-        type: array
-        uniqueItems: true
-        description: 'Categories of all goods in the order，If the value of is_non_cod is equal to true, this field must be set'
         items:
           type: string
           enum:
