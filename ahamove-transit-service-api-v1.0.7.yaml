@@ -386,19 +386,24 @@ definitions:
           total_price:
             type: number
             format: double
-            description: total price of item
-        required:
-          - total_price
+            description: |-
+              total price of item, This field must be set when one of the following situations occurs
+              1. When all parcels in the order are of cod type
+              2. When the package in the order has cod type and non-cod type
       categories:
         type: array
         uniqueItems: true
         description: 'Categories of all goods in the transit，If the value of is_non_cod is equal to true, this field must be set'
+        items: {}
       item_value:
         type: number
         format: float
         description: |-
           for prepaid value
           order of Key Account, If customer is a key account, this field must be set
+      is_non_cod:
+        type: boolean
+        description: 'If the transit is non-cod, please set the field to true, otherwise please set it to false'
     required:
       - transit_id
       - tracking_number
@@ -555,9 +560,6 @@ definitions:
             - restaurant
             - sport
             - other
-      is_non_cod:
-        type: boolean
-        description: 'If the order is non-cod, please set the field to true, otherwise please set it to false'
     required:
       - order_id
       - order_created_date
